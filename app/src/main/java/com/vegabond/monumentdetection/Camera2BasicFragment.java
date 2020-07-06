@@ -43,6 +43,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +88,8 @@ import static android.media.MediaActionSound.FOCUS_COMPLETE;
 
 public class Camera2BasicFragment extends Fragment
         implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+
+
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -282,8 +285,9 @@ public class Camera2BasicFragment extends Fragment
 
     };
 
+    Activity activity = getActivity();
     private void showToast(final String text) {
-        final Activity activity = getActivity();
+        activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -337,9 +341,10 @@ public class Camera2BasicFragment extends Fragment
         return inflater.inflate(R.layout.fragment_camera2_basic, container, false);
     }
 
-    private ImageButton ibsettings;
+    private ImageButton ibsettings,capture;
     static SettingUtility.SettingsControl setting;
-    private TextView waitTimer;
+    private TextView notice,info;
+    private ProgressBar progress;
     static int count = 0;
     static File storageDir;
 
@@ -349,7 +354,12 @@ public class Camera2BasicFragment extends Fragment
         setting = SettingUtility.getControlSettings(getContext());
 
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
-        waitTimer = view.findViewById(R.id.TVwaitingTimer);
+        notice = view.findViewById(R.id.TVNotice);
+        info = view.findViewById(R.id.TVInfo);
+        progress = view.findViewById(R.id.PBprogress);
+        capture = view.findViewById(R.id.IBcapture);
+
+
         ibsettings = view.findViewById(R.id.IBmenu);
         ibsettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -795,6 +805,12 @@ public class Camera2BasicFragment extends Fragment
                     takePicture();
                 } else {
                     count = 0;
+                    progress.setVisibility(View.VISIBLE);
+                    notice.setVisibility(View.VISIBLE);
+                    info.setVisibility(View.VISIBLE);
+                    capture.setImageResource(R.drawable.ic_camera_white);
+                    capture.setClickable(false);
+
                     final int[] maxSnap = {Integer.parseInt(setting.getMaxPhoto())};
                     final int maxGap = Integer.parseInt(setting.getSnapDuration());
                     Log.d("Test1", maxGap + " " + maxSnap[0]);
@@ -805,7 +821,14 @@ public class Camera2BasicFragment extends Fragment
                         public void run() {
 
                             int remain = maxSnap[0]-count;
+                            info.setText("Remaining : "+remain+"/"+maxSnap[0]+" Capture");
                             Toast.makeText(getContext(), "Remaining : "+remain+"/"+maxSnap[0], Toast.LENGTH_SHORT).show();
+                        }
+                    };
+                    final Runnable afterProcessing = new Runnable() {
+                        public void run() {
+
+                            Toast.makeText(getContext(), "Allignment Completed", Toast.LENGTH_LONG).show();
                         }
                     };
                     thread = new Thread() {
@@ -814,10 +837,6 @@ public class Camera2BasicFragment extends Fragment
 
                             while (!thread.isInterrupted()) {
                                 takePicture();
-//                                Mat reference = Imgcodecs.imread(storageDir+"/0.jpg",-1);
-//                                Mat toCompare = Imgcodecs.imread(mFile.getAbsolutePath(),-1);
-//                                Mat processed = ImageProcessing.imageRegistration(reference,toCompare);
-//                                Imgcodecs.imwrite(storageDir+"/processed"+count+".jpg", processed);
                                 Log.d("Check4","checking");
                                 mHandler.post(mUpdateResults);
                                 try {
@@ -827,8 +846,20 @@ public class Camera2BasicFragment extends Fragment
                                 }
                                 if(count==maxSnap[0]){
                                     Thread.currentThread().interrupt();
-                                    return;
-
+                                    progress.setVisibility(View.INVISIBLE);
+                                    notice.setVisibility(View.INVISIBLE);
+                                    info.setVisibility(View.INVISIBLE);
+                                    capture.setImageResource(R.drawable.ic_capture);
+                                    capture.setClickable(true);
+                                    mHandler.post(mUpdateResults);
+                                    boolean res  = ImageProcessing.imageProcess();
+                                    if (!setting.getStoreOriginal()){
+                                        storageDir.delete();
+                                    }
+                                    if (res){
+                                        startActivity(new Intent(getActivity(),ImageViewActivity.class));
+                                    }
+//                                    return;
                                 }
                             }
                         }
@@ -884,14 +915,16 @@ public class Camera2BasicFragment extends Fragment
             try {
                 output = new FileOutputStream(mFile);
                 output.write(bytes);
-                if (count>0) {
-                    Mat reference = Imgcodecs.imread(storageDir + "/1.jpg");
-                    Mat toCompare = Imgcodecs.imread(storageDir + "/"+count+".jpg");
-                    Log.d("Processed","Ref : "+storageDir+"/0.jpg"+"\n"+"Comp : "+storageDir+"/"+count+".jpg" );
-                    Mat processed = ImageProcessing.imageRegistration(reference, toCompare);
-                    Imgcodecs.imwrite(storageDir + "/processed" + count + ".jpg", processed);
+                if (setting.getDetectionMode()) {
+                    if (count > 0) {
+                        Mat reference = Imgcodecs.imread(storageDir + "/0.jpg");
+                        Mat toCompare = Imgcodecs.imread(storageDir + "/" + count + ".jpg");
+                        Log.d("Processed", "Ref : " + storageDir + "/0.jpg" + "\n" + "Comp : " + storageDir + "/" + count + ".jpg");
+                        Mat processed = ImageProcessing.imageRegistration(reference, toCompare);
+                        Imgcodecs.imwrite(storageDir + "/processed" + count + ".jpg", processed);
+                    }
+                    count++;
                 }
-                count++;
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {

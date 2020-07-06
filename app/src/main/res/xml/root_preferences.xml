@@ -1,0 +1,78 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <PreferenceCategory app:title="About">
+
+        <PreferenceScreen
+            android:icon="@drawable/ic_camera"
+            android:key="Developer"
+            android:title="Developed By : "
+            android:summary="Email ID : ">
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:icon="@drawable/ic_share_black_24dp"
+            android:key="shareapp"
+            android:title="Share App APK">
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:icon="@drawable/ic_share_black_24dp"
+            android:key="shareappLink"
+            android:title="Share App via Link">
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory app:title="App Feature">
+
+        <SwitchPreferenceCompat
+            app:key="key_monumentDetectionModeState"
+            app:summaryOff="Disabled"
+            app:summaryOn="Enabled"
+            app:title="Monument Detection Mode" />
+
+        <ListPreference
+            app:dependency="key_monumentDetectionModeState"
+            app:key="key_SnapGap"
+            app:defaultValue="10"
+            app:entries="@array/snapGap_entries"
+            app:entryValues="@array/snapGap_values"
+            app:title="Snap Gap Duration"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:dependency="key_monumentDetectionModeState"
+            app:key="key_MaximumPhoto"
+            app:defaultValue="10"
+            app:entries="@array/maxPhoto_entries"
+            app:entryValues="@array/maxPhoto_values"
+            app:title="Maximum Snap"
+            app:useSimpleSummaryProvider="true" />
+
+
+        <SwitchPreferenceCompat
+            app:dependency="key_monumentDetectionModeState"
+            app:key="key_StorePic"
+            app:title="Store Processed and Original Image" />
+
+
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory app:title="Help">
+
+        <PreferenceScreen
+            android:icon="@drawable/ic_help_black_24dp"
+            android:key="pref_help"
+            android:title="Help"
+            android:summary="Get online help">
+        </PreferenceScreen>
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

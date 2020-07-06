@@ -1,6 +1,9 @@
 package com.vegabond.monumentdetection;
 
+import android.app.Activity;
 import android.os.Build;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.DMatch;
@@ -29,45 +32,40 @@ import static org.opencv.imgproc.Imgproc.cvtColor;
 
 public class ImageProcessing {
 
-//    static void transform(Mat img_ref){
-//        Imgcodecs.imwrite("new"+count+".jpg",img_ref);
-//    }
+    static boolean imageProcess(){
+        Log.d("ImageProcessing","In After Allignment");
+        int startPic = 1;
+        int endPic = count-1;
+        for (int i=startPic;i<=endPic;i++){
+            String processed_path = storageDir+"/processed"+i+".jpg";
 
-//    static void postImageCapturing(){
-//        for (int i=0;i<Integer.parseInt(setting.getMaxPhoto());i++){
-//            Mat finalImg = imageRegistration(Imgcodecs.imread(storageDir+"/0.jpg"),Imgcodecs.imread(storageDir+"/"+i+".jpg"));
-//            Imgcodecs.imwrite(storageDir+"/final"+i+".jpg",finalImg);
-//
-//        }
-//    }
+        }
+        return true;
 
-    static Mat imageRegistration(Mat img1, Mat img2){
-        // Creating the empty destination matrix
-        Imgcodecs.imwrite(storageDir+"/ref_new.jpg",img1);
-        Mat img_ref = Imgcodecs.imread(storageDir + "/ref_new.jpg");
-        Imgcodecs.imwrite(storageDir+"/comp_new.jpg",img2);
-        Mat new_img = Imgcodecs.imread(storageDir + "/comp_new.jpg");
+    }
 
-
+    static Mat imageRegistration(Mat img_ref, Mat new_img){
 
         Mat img_ref_gray=new Mat();
         cvtColor(img_ref,img_ref_gray,Imgproc.COLOR_BGR2GRAY);
-        Imgcodecs.imwrite(storageDir + "/orGrayOrg" + count + ".jpg", img_ref_gray);
+//        Imgcodecs.imwrite(storageDir + "/orGrayOrg" + count + ".jpg", img_ref_gray);
 
-        Size s=new_img.size();
         Mat new_img_gray=new Mat();
         cvtColor(new_img,new_img_gray,Imgproc.COLOR_BGR2GRAY);
-        Imgcodecs.imwrite(storageDir + "/nwGrayOrg" + count + ".jpg", new_img_gray);
+//        Imgcodecs.imwrite(storageDir + "/nwGrayOrg" + count + ".jpg", new_img_gray);
 
         ORB orb_detector=ORB.create();
 
         orb_detector.setMaxFeatures(5000);
+
         MatOfKeyPoint keypoints_1=new MatOfKeyPoint();
         Mat descriptors_1=new Mat();
+
         MatOfKeyPoint keypoints_2=new MatOfKeyPoint();
         Mat descriptors_2=new Mat();
-        orb_detector.detectAndCompute(img_ref_gray, img_ref_gray, keypoints_1, descriptors_1);
-        orb_detector.detectAndCompute(new_img_gray, new_img_gray ,keypoints_2, descriptors_2);
+
+        orb_detector.detectAndCompute(img_ref_gray, new Mat(), keypoints_1, descriptors_1);
+        orb_detector.detectAndCompute(new_img_gray, new Mat() ,keypoints_2, descriptors_2);
         List<KeyPoint> kp1=keypoints_1.toList();
         List<KeyPoint> kp2=keypoints_2.toList();
         BFMatcher matcher=BFMatcher.create(BFMatcher.BRUTEFORCE_HAMMING, true);
@@ -101,6 +99,7 @@ public class ImageProcessing {
         matScene.fromList(p2);
 
         Mat homography = Calib3d.findHomography(matObject, matScene, Calib3d.RANSAC,5.0f);
+        homography = homography.inv();
 
         Mat transformed_img=new Mat();
         Imgproc.warpPerspective(new_img,transformed_img,homography,new_img.size());
@@ -114,7 +113,11 @@ class Compare_Dmatch implements Comparator<DMatch> {
     @Override
     public int compare(DMatch o1, DMatch o2) {
         // TODO Auto-generated method stub
-        return (o1.distance<o2.distance)?1:0;
+        if(o1.distance<o2.distance)
+            return -1;
+        if(o1.distance>o2.distance)
+            return 1;
+        return 0;
     }
 
 }
