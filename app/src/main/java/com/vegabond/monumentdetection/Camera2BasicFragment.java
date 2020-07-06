@@ -52,6 +52,22 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.calib3d.Calib3d;
+import org.opencv.core.CvType;
+import org.opencv.core.DMatch;
+import org.opencv.core.KeyPoint;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfDMatch;
+import org.opencv.core.MatOfKeyPoint;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.features2d.DescriptorMatcher;
+import org.opencv.features2d.ORB;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -62,6 +78,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -80,6 +97,10 @@ public class Camera2BasicFragment extends Fragment
         ORIENTATIONS.append(Surface.ROTATION_90, 0);
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
+    }
+
+    static {
+        OpenCVLoader.initDebug();
     }
 
     private static final String TAG = "Camera2BasicFragment";
@@ -177,7 +198,7 @@ public class Camera2BasicFragment extends Fragment
         @Override
         public void onImageAvailable(ImageReader reader) {
             if (setting.getDetectionMode()) {
-                mFile = new File(storageDir + "/" + (count++) + ".jpg");
+                mFile = new File(storageDir + "/" + (count) + ".jpg");
             }
             mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
         }
@@ -320,7 +341,7 @@ public class Camera2BasicFragment extends Fragment
     static SettingUtility.SettingsControl setting;
     private TextView waitTimer;
     static int count = 0;
-    File storageDir;
+    static File storageDir;
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -350,7 +371,7 @@ public class Camera2BasicFragment extends Fragment
         if (setting.getDetectionMode()){
             storageDir = new File(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/" + "Monument" + "/temp/");
-            mFile = new File(storageDir + "/" + (count++) + ".jpg");
+            mFile = new File(storageDir + "/" + (count) + ".jpg");
         }else{
             storageDir = new File(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/" + "Monument" + "/");
@@ -374,6 +395,13 @@ public class Camera2BasicFragment extends Fragment
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+        }
+        if (!OpenCVLoader.initDebug()) {
+            Log.d("OpenCV", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, getContext(), mLoaderCallback);
+        } else {
+            Log.d("OpenCV", "OpenCV library found inside package. Using it!");
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
 
@@ -775,6 +803,7 @@ public class Camera2BasicFragment extends Fragment
                     final Handler mHandler = new Handler();
                     final Runnable mUpdateResults = new Runnable() {
                         public void run() {
+
                             int remain = maxSnap[0]-count;
                             Toast.makeText(getContext(), "Remaining : "+remain+"/"+maxSnap[0], Toast.LENGTH_SHORT).show();
                         }
@@ -785,6 +814,11 @@ public class Camera2BasicFragment extends Fragment
 
                             while (!thread.isInterrupted()) {
                                 takePicture();
+//                                Mat reference = Imgcodecs.imread(storageDir+"/0.jpg",-1);
+//                                Mat toCompare = Imgcodecs.imread(mFile.getAbsolutePath(),-1);
+//                                Mat processed = ImageProcessing.imageRegistration(reference,toCompare);
+//                                Imgcodecs.imwrite(storageDir+"/processed"+count+".jpg", processed);
+                                Log.d("Check4","checking");
                                 mHandler.post(mUpdateResults);
                                 try {
                                     Thread.sleep(maxGap * 1000);
@@ -794,6 +828,7 @@ public class Camera2BasicFragment extends Fragment
                                 if(count==maxSnap[0]){
                                     Thread.currentThread().interrupt();
                                     return;
+
                                 }
                             }
                         }
@@ -804,6 +839,23 @@ public class Camera2BasicFragment extends Fragment
             }
         }
     }
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(getContext()) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                {
+                    Log.i("OpenCV", "OpenCV loaded successfully");
+//                    imageMat=new Mat();
+                } break;
+                default:
+                {
+                    super.onManagerConnected(status);
+                } break;
+            }
+        }
+    };
 
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
         if (mFlashSupported) {
@@ -832,6 +884,14 @@ public class Camera2BasicFragment extends Fragment
             try {
                 output = new FileOutputStream(mFile);
                 output.write(bytes);
+                if (count>0) {
+                    Mat reference = Imgcodecs.imread(storageDir + "/1.jpg");
+                    Mat toCompare = Imgcodecs.imread(storageDir + "/"+count+".jpg");
+                    Log.d("Processed","Ref : "+storageDir+"/0.jpg"+"\n"+"Comp : "+storageDir+"/"+count+".jpg" );
+                    Mat processed = ImageProcessing.imageRegistration(reference, toCompare);
+                    Imgcodecs.imwrite(storageDir + "/processed" + count + ".jpg", processed);
+                }
+                count++;
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {

@@ -20,6 +20,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            jni {
+                srcDirs 'src/main/jni', 'src/main/jniLibs/'
+            }
+        }
+    }
+
+
+//    sourceSets.main {
+//        jniLibs.srcDirs = ['libs']
+//        jni {
+//            srcDirs 'src/main/jni', 'src/main/jniLibs/'
+//        }
+//    }
 
 }
 
@@ -33,4 +48,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+
+//    implementation 'org.bytedeco:javacv:1.4.1'
+//    implementation 'org.bytedeco.javacpp-presets:opencv:3.4.1-1.4.1:android-arm64'
+//    implementation 'org.bytedeco.javacpp-presets:ffmpeg:3.4.1-1.4.1:android-arm64'
+    implementation project(path: ':openCVLibrary341')
 }
