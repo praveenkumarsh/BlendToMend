@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.opencv.calib3d.Calib3d;
+import org.opencv.core.Core;
 import org.opencv.core.DMatch;
 import org.opencv.core.KeyPoint;
 import org.opencv.core.Mat;
@@ -99,7 +100,9 @@ public class ImageProcessing {
         matScene.fromList(p2);
 
         Mat homography = Calib3d.findHomography(matObject, matScene, Calib3d.RANSAC,5.0f);
-        homography = homography.inv();
+        if (Core.determinant(homography)!=0) {
+            homography = homography.inv();
+        }
 
         Mat transformed_img=new Mat();
         Imgproc.warpPerspective(new_img,transformed_img,homography,new_img.size());

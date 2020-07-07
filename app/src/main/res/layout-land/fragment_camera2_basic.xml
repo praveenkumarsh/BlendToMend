@@ -57,16 +57,39 @@
 
 
         <TextView
-            android:id="@+id/TVwaitingTimer"
-            android:layout_width="wrap_content"
+            android:id="@+id/TVNotice"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="10"
+            android:text="In Progress\nPlease Keep Your Camera Still as much as possible"
             android:textColor="@color/colorAccent"
             android:textStyle="bold"
-            android:textSize="150sp"
-            android:layout_gravity="center"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_marginTop="100dp"
             android:visibility="invisible"
 
+            />
+
+        <TextView
+            android:id="@+id/TVInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remaining 10/10 capture"
+            android:textColor="#DA0384"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_marginTop="150dp"
+            android:visibility="invisible"
+
+            />
+
+        <ProgressBar
+            android:id="@+id/PBprogress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"
             />
 
         <SeekBar
