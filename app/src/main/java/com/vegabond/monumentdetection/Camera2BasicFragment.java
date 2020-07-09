@@ -27,7 +27,9 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.MediaActionSound;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
@@ -50,6 +52,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
@@ -347,18 +350,20 @@ public class Camera2BasicFragment extends Fragment
     private ProgressBar progress;
     static int count = 0;
     static File storageDir;
+    static File storageDirMain;
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         view.findViewById(R.id.IBcapture).setOnClickListener(this);
         setting = SettingUtility.getControlSettings(getContext());
+        storageDirMain  = new File(Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/" + "Monument" + "/");
 
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
         notice = view.findViewById(R.id.TVNotice);
         info = view.findViewById(R.id.TVInfo);
         progress = view.findViewById(R.id.PBprogress);
         capture = view.findViewById(R.id.IBcapture);
-
 
         ibsettings = view.findViewById(R.id.IBmenu);
         ibsettings.setOnClickListener(new View.OnClickListener() {
@@ -846,18 +851,31 @@ public class Camera2BasicFragment extends Fragment
                                 }
                                 if(count==maxSnap[0]){
                                     Thread.currentThread().interrupt();
-                                    progress.setVisibility(View.INVISIBLE);
                                     notice.setVisibility(View.INVISIBLE);
                                     info.setVisibility(View.INVISIBLE);
+
+                                    mHandler.post(mUpdateResults);
+
+//                                    afterProgress.setVisibility(View.VISIBLE);
+//                                    afterInfo.setVisibility(View.VISIBLE);
+                                    String res  = ImageProcessing.imageProcess();
+                                    progress.setVisibility(View.INVISIBLE);
                                     capture.setImageResource(R.drawable.ic_capture);
                                     capture.setClickable(true);
-                                    mHandler.post(mUpdateResults);
-                                    boolean res  = ImageProcessing.imageProcess();
                                     if (!setting.getStoreOriginal()){
                                         storageDir.delete();
                                     }
-                                    if (res){
-                                        startActivity(new Intent(getActivity(),ImageViewActivity.class));
+//                                    afterProgress.setVisibility(View.INVISIBLE);
+//                                    afterInfo.setVisibility(View.INVISIBLE);
+
+                                    if (res!=""){
+                                        File file = new File(res);
+                                        final Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
+                                                                FileProvider.getUriForFile(getContext(),getContext().getPackageName() + ".provider", file)
+                                                                : Uri.fromFile(file),
+                                                        "image/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                        startActivity(intent);
                                     }
 //                                    return;
                                 }

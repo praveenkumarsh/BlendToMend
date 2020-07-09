@@ -93,6 +93,29 @@
             android:visibility="invisible"
             />
 
+        <ProgressBar
+            android:id="@+id/PBAfterprogress"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="100dp"
+            android:visibility="invisible"
+            />
+
+        <TextView
+            android:id="@+id/TVAfterInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Processing Please Wait..."
+            android:textColor="#DA0384"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+
+            />
+
         <SeekBar
             android:id="@+id/SBzoom"
             android:layout_gravity="bottom"

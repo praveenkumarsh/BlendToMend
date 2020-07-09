@@ -21,28 +21,102 @@ import org.opencv.features2d.ORB;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import static com.vegabond.monumentdetection.Camera2BasicFragment.count;
 import static com.vegabond.monumentdetection.Camera2BasicFragment.setting;
 import static com.vegabond.monumentdetection.Camera2BasicFragment.storageDir;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.storageDirMain;
 import static org.opencv.imgproc.Imgproc.cvtColor;
 
 public class ImageProcessing {
 
-    static boolean imageProcess(){
+
+    static String imageProcess(){
         Log.d("ImageProcessing","In After Allignment");
+        List<Mat> listImages = new ArrayList<>();
         int startPic = 1;
         int endPic = count-1;
+        Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
         for (int i=startPic;i<=endPic;i++){
-            String processed_path = storageDir+"/processed"+i+".jpg";
+            String file_name = storageDir+"/processed"+i+".jpg";
+            Log.d("ImageProcessing","FilePath :"+file_name);
+            Mat img = Imgcodecs.imread(file_name);
+
+            listImages.add(img);
 
         }
-        return true;
+        Log.d("ImageProcessing","Images List Size :"+listImages.size());
 
+//        for (int i = 0; i < listImages.get(0).rows(); i++) {
+//            for (int j = 0; j < listImages.get(0).cols(); j++) {
+//                double r = 0.0;
+//                double g = 0.0;
+//                double b = 0.0;
+//                for (int k = 0; k < listImages.size(); k++) {
+//                    double[] rgb = listImages.get(k).get(i, j);
+//                    r += rgb[0];
+//                    g += rgb[1];
+//                    b += rgb[2];
+//                }
+//                double red = r/listImages.size();
+//                double green = g/listImages.size();
+//                double blue = b/listImages.size();
+//                listImages.get(0).put(i, j, new double[] { red, green, blue });
+//            }
+//        }
+
+
+        for (int i = 0; i < listImages.get(0).rows(); i++) {
+            for (int j = 0; j < listImages.get(0).cols(); j++) {
+                double[] r = new double[listImages.size()];
+                double[] g = new double[listImages.size()];
+                double[] b = new double[listImages.size()];
+                for (int k = 0; k < listImages.size(); k++) {
+                    double[] rgb = listImages.get(k).get(i, j);
+                    r[k] = rgb[0];
+                    g[k] = rgb[1];
+                    b[k] = rgb[2];
+                }
+                double red = median(r);
+                double green = median(g);
+                double blue = median(b);
+                listImages.get(0).put(i, j, new double[] { red, green, blue });
+            }
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        final String currentTimeStamp = dateFormat.format(new Date());
+
+        Imgcodecs.imwrite(storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg", listImages.get(0));
+        Log.d("ImageProcessing","Saved :"+storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg");
+
+        return storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg";
+
+    }
+
+    static double median(double[] values) {
+        Arrays.sort(values);
+        double median;
+
+        int totalElements = values.length;
+
+        // check if total number of scores is even
+        if (totalElements % 2 == 0) {
+            double sumOfMiddleElements = values[totalElements / 2] + values[totalElements / 2 - 1];
+            // calculate average of middle elements
+            median = ((double) sumOfMiddleElements) / 2;
+        } else {
+            // get the middle element
+            median = (double) values[values.length / 2];
+        }
+        return median;
     }
 
     static Mat imageRegistration(Mat img_ref, Mat new_img){
