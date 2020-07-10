@@ -13,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
+import androidx.preference.SwitchPreferenceCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,6 +57,12 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
+//            SwitchPreferenceCompat preferenceSet = findPreference("key_monumentDetectionModeState");
+//            if (preferenceSet != null) {
+//                preferenceSet.setChecked(true);
+//            }
+
+
             //======================================================================================
             // For Share App
             PreferenceScreen preferenceShare = findPreference("shareapp");
@@ -75,6 +83,8 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             });
+
+
 
             //=====================================Help Page========================================
 

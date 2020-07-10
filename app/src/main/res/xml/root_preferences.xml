@@ -32,6 +32,7 @@
             app:key="key_monumentDetectionModeState"
             app:summaryOff="Disabled"
             app:summaryOn="Enabled"
+            app:defaultValue="true"
             app:title="Monument Detection Mode" />
 
         <ListPreference
@@ -56,6 +57,7 @@
         <SwitchPreferenceCompat
             app:dependency="key_monumentDetectionModeState"
             app:key="key_StorePic"
+            android:checked="true"
             app:title="Store Processed and Original Image" />
 
 

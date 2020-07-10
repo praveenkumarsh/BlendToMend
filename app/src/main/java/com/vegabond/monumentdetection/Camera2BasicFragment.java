@@ -364,6 +364,14 @@ public class Camera2BasicFragment extends Fragment
         info = view.findViewById(R.id.TVInfo);
         progress = view.findViewById(R.id.PBprogress);
         capture = view.findViewById(R.id.IBcapture);
+//        recent = view.findViewById(R.id.IBrecent);
+//
+//        recent.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(getContext(),"Recent Pic View, Coming Soon...",Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         ibsettings = view.findViewById(R.id.IBmenu);
         ibsettings.setOnClickListener(new View.OnClickListener() {
@@ -439,7 +447,7 @@ public class Camera2BasicFragment extends Fragment
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length != 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length <1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 ErrorDialog.newInstance(getString(R.string.request_permission))
                         .show(getChildFragmentManager(), FRAGMENT_DIALOG);
             }
@@ -862,9 +870,9 @@ public class Camera2BasicFragment extends Fragment
                                     progress.setVisibility(View.INVISIBLE);
                                     capture.setImageResource(R.drawable.ic_capture);
                                     capture.setClickable(true);
-                                    if (!setting.getStoreOriginal()){
-                                        storageDir.delete();
-                                    }
+//                                    if (!setting.getStoreOriginal()){
+//                                        storageDir.delete();
+//                                    }
 //                                    afterProgress.setVisibility(View.INVISIBLE);
 //                                    afterInfo.setVisibility(View.INVISIBLE);
 
