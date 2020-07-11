@@ -24,6 +24,7 @@ import org.opencv.imgproc.Imgproc;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
@@ -75,14 +76,22 @@ public class ImageProcessing {
 
         for (int i = 0; i < listImages.get(0).rows(); i++) {
             for (int j = 0; j < listImages.get(0).cols(); j++) {
-                double[] r = new double[listImages.size()];
-                double[] g = new double[listImages.size()];
-                double[] b = new double[listImages.size()];
+                List<Double> r = new ArrayList<>();
+                List<Double> g = new ArrayList<>();
+                List<Double> b = new ArrayList<>();
+//                double[] r = new double[listImages.size()];
+//                double[] g = new double[listImages.size()];
+//                double[] b = new double[listImages.size()];
                 for (int k = 0; k < listImages.size(); k++) {
                     double[] rgb = listImages.get(k).get(i, j);
-                    r[k] = rgb[0];
-                    g[k] = rgb[1];
-                    b[k] = rgb[2];
+                    if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
+                        r.add(rgb[0]);
+                        g.add(rgb[1]);
+                        b.add(rgb[2]);
+                    }
+//                    r[k] = rgb[0];
+//                    g[k] = rgb[1];
+//                    b[k] = rgb[2];
                 }
                 double red = median(r);
                 double green = median(g);
@@ -101,20 +110,25 @@ public class ImageProcessing {
 
     }
 
-    static double median(double[] values) {
-        Arrays.sort(values);
-        double median;
+    static double median(List<Double> values) {
+        Collections.sort(values);
+        double median = 0;
 
-        int totalElements = values.length;
+        int totalElements = values.size();
+        // System.out.println("Total Elements :"+totalElements);
+        if (totalElements >1) {
 
-        // check if total number of scores is even
-        if (totalElements % 2 == 0) {
-            double sumOfMiddleElements = values[totalElements / 2] + values[totalElements / 2 - 1];
-            // calculate average of middle elements
-            median = ((double) sumOfMiddleElements) / 2;
+            // check if total number of scores is even
+            if (totalElements % 2 == 0) {
+                double sumOfMiddleElements = values.get(totalElements / 2) + values.get(totalElements / 2 - 1);
+                // calculate average of middle elements
+                median = ((double) sumOfMiddleElements) / 2;
+            } else {
+                // get the middle element
+                median = (double) values.get(values.size() / 2);
+            }
         } else {
-            // get the middle element
-            median = (double) values[values.length / 2];
+            median = 255.0;
         }
         return median;
     }
