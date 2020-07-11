@@ -100,7 +100,7 @@ public class ImageProcessing {
             }
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
         Imgcodecs.imwrite(storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg", listImages.get(0));
