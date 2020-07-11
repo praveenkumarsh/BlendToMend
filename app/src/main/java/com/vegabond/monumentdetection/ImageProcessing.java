@@ -42,7 +42,7 @@ public class ImageProcessing {
     static String imageProcess(){
         Log.d("ImageProcessing","In After Allignment");
         List<Mat> listImages = new ArrayList<>();
-        int startPic = 1;
+        int startPic = 0;
         int endPic = count-1;
         Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
         for (int i=startPic;i<=endPic;i++){

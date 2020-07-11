@@ -302,7 +302,7 @@ public class Camera2BasicFragment extends Fragment
     }
 
     private static Size chooseOptimalSize(Size[] choices, int textureViewWidth,
-            int textureViewHeight, int maxWidth, int maxHeight, Size aspectRatio) {
+                                          int textureViewHeight, int maxWidth, int maxHeight, Size aspectRatio) {
 
         // Collect the supported resolutions that are at least as big as the preview Surface
         List<Size> bigEnough = new ArrayList<>();
@@ -314,7 +314,7 @@ public class Camera2BasicFragment extends Fragment
             if (option.getWidth() <= maxWidth && option.getHeight() <= maxHeight &&
                     option.getHeight() == option.getWidth() * h / w) {
                 if (option.getWidth() >= textureViewWidth &&
-                    option.getHeight() >= textureViewHeight) {
+                        option.getHeight() >= textureViewHeight) {
                     bigEnough.add(option);
                 } else {
                     notBigEnough.add(option);
@@ -398,7 +398,7 @@ public class Camera2BasicFragment extends Fragment
         }else{
             storageDir = new File(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/" + "Monument" + "/");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
             final String currentTimeStamp = dateFormat.format(new Date());
             mFile = new File(storageDir + "/" + "IMG"+ currentTimeStamp + ".jpg");
         }
@@ -566,6 +566,11 @@ public class Camera2BasicFragment extends Fragment
     }
 
     private void openCamera(int width, int height) {
+        File tempstorageDir = new File(Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/" + "Monument" + "/temp/");
+        if (!tempstorageDir.exists())
+            tempstorageDir.mkdirs();
+
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             requestCameraPermission();
@@ -879,10 +884,10 @@ public class Camera2BasicFragment extends Fragment
                                     if (res!=""){
                                         File file = new File(res);
                                         final Intent intent = new Intent(Intent.ACTION_VIEW);
-                                                intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
-                                                                FileProvider.getUriForFile(getContext(),getContext().getPackageName() + ".provider", file)
-                                                                : Uri.fromFile(file),
-                                                        "image/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                        intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
+                                                        FileProvider.getUriForFile(getContext(),getContext().getPackageName() + ".provider", file)
+                                                        : Uri.fromFile(file),
+                                                "image/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                         startActivity(intent);
                                     }
 //                                    return;
@@ -948,6 +953,10 @@ public class Camera2BasicFragment extends Fragment
                         Log.d("Processed", "Ref : " + storageDir + "/0.jpg" + "\n" + "Comp : " + storageDir + "/" + count + ".jpg");
                         Mat processed = ImageProcessing.imageRegistration(reference, toCompare);
                         Imgcodecs.imwrite(storageDir + "/processed" + count + ".jpg", processed);
+
+                        if (count == 1){
+                            Imgcodecs.imwrite(storageDir + "/processed" + "0" + ".jpg",reference);
+                        }
                     }
                     count++;
                 }
