@@ -42,4 +42,25 @@
         <item>25</item>
     </string-array>
 
+    <string-array name="Mode_entries">
+        <item>Basic Mode1 (Pixel by pixel)</item>
+        <item>Basic Mode2 (Half Image compare)</item>
+        <item>Basic Mode3 (Sliding window)</item>
+        <item>Intermediate Mode1 (Half image compare with slidding window)</item>
+        <item>Advanced Mode1 (Using Short Array)</item>
+        <item>Advanced Mode2 (Using Short Array with Half Image Compare)</item>
+        <item>Advanced Mode3 (Using Short Array with Half Image and Sliding Window Compare)</item>
+
+    </string-array>
+
+    <string-array name="Mode_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
 </resources>

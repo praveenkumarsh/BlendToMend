@@ -478,9 +478,12 @@ public class Camera2BasicFragment extends Fragment
                 }
 
                 // For still image captures, we use the largest available size.
-                Size largest = Collections.max(
-                        Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
-                        new CompareSizesByArea());
+                Size[] siz = map.getOutputSizes(ImageFormat.JPEG);
+                Arrays.sort(siz, new CompareSizesByArea());
+                Size largest = siz[siz.length-3];
+//                Size largest = Collections.max(
+//                        Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
+//                        new CompareSizesByArea());
                 mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
                         ImageFormat.JPEG, /*maxImages*/2);
                 mImageReader.setOnImageAvailableListener(
@@ -871,7 +874,7 @@ public class Camera2BasicFragment extends Fragment
 
 //                                    afterProgress.setVisibility(View.VISIBLE);
 //                                    afterInfo.setVisibility(View.VISIBLE);
-                                    String res  = ImageProcessing.imageProcess();
+                                    String res  = ImageProcessing.imageProcess(getContext());
                                     progress.setVisibility(View.INVISIBLE);
                                     capture.setImageResource(R.drawable.ic_capture);
                                     capture.setClickable(true);

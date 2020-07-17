@@ -15,8 +15,9 @@ public class SettingUtility {
         String snapDuration = preferences.getString("key_SnapGap","10");
         Boolean storeOriginal = preferences.getBoolean("key_StorePic",true);
         String maxPhoto = preferences.getString("key_MaximumPhoto","10");
+        String mode = preferences.getString("key_Mode","1");
 
-        return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal);
+        return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode);
     }
 
     public static class SettingsControl {
@@ -24,12 +25,14 @@ public class SettingUtility {
         String SnapDuration;
         String MaxPhoto;
         Boolean StoreOriginal;
+        String Mode;
 
-        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal) {
+        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode) {
             DetectionMode = detectionMode;
             SnapDuration = snapDuration;
             MaxPhoto = maxPhoto;
             StoreOriginal = storeOriginal;
+            Mode = mode;
         }
 
         public Boolean getDetectionMode() {
@@ -62,6 +65,14 @@ public class SettingUtility {
 
         public void setStoreOriginal(Boolean storeOriginal) {
             StoreOriginal = storeOriginal;
+        }
+
+        public String getMode() {
+            return Mode;
+        }
+
+        public void setMode(String mode) {
+            Mode = mode;
         }
     }
 

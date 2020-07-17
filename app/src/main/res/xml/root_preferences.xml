@@ -60,6 +60,14 @@
             android:checked="true"
             app:title="Store Processed and Original Image" />
 
+        <ListPreference
+            app:dependency="key_monumentDetectionModeState"
+            app:key="key_Mode"
+            app:defaultValue="1"
+            app:entries="@array/Mode_entries"
+            app:entryValues="@array/Mode_values"
+            app:title="Maximum Snap"
+            app:useSimpleSummaryProvider="true" />
 
 
     </PreferenceCategory>
