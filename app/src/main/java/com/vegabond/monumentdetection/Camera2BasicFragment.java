@@ -483,11 +483,11 @@ public class Camera2BasicFragment extends Fragment
                 // For still image captures, we use the largest available size.
                 Size largest;
                 if (Integer.parseInt(SettingUtility.getControlSettings(getContext()).getMode())>4){
-//                    Size[] siz = map.getOutputSizes(ImageFormat.JPEG);
-//                    Arrays.sort(siz, new CompareSizesByArea());
-//                    largest = siz[siz.length-3];
-//                    Log.d("Size","Size :"+largest.getHeight()+" "+largest.getWidth());
-                    largest = new Size(3840,2160);
+                    Size[] siz = map.getOutputSizes(ImageFormat.JPEG);
+                    Arrays.sort(siz, new CompareSizesByArea());
+                    largest = siz[siz.length-5];
+                    Log.d("Size","Size :"+largest.getHeight()+" "+largest.getWidth());
+//                    largest = new Size(3840,2160);
                 }else{
                     largest = Collections.max(
                             Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
@@ -882,8 +882,6 @@ public class Camera2BasicFragment extends Fragment
 
                                     mHandler.post(mUpdateResults);
 
-//                                    afterProgress.setVisibility(View.VISIBLE);
-//                                    afterInfo.setVisibility(View.VISIBLE);
                                     if (SettingUtility.getControlSettings(getContext()).getPreviewMode()){
                                         generatePreview();
                                         String res = ImageProcessing.imageProcess(getContext(),true);
@@ -900,11 +898,6 @@ public class Camera2BasicFragment extends Fragment
                                         progress.setVisibility(View.INVISIBLE);
                                         capture.setImageResource(R.drawable.ic_capture);
                                         capture.setClickable(true);
-//                                    if (!setting.getStoreOriginal()){
-//                                        storageDir.delete();
-//                                    }
-//                                    afterProgress.setVisibility(View.INVISIBLE);
-//                                    afterInfo.setVisibility(View.INVISIBLE);
 
                                         if (!res .equals("")) {
                                             File file = new File(res);
@@ -916,7 +909,6 @@ public class Camera2BasicFragment extends Fragment
                                             startActivity(intent);
                                         }
                                     }
-//                                    return;
                                 }
                             }
                         }
@@ -1095,4 +1087,24 @@ public class Camera2BasicFragment extends Fragment
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (!setting.getStoreOriginal()){
+            File dir = new File(Environment
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/" + "Monument" + "/temp/");
+            if (dir.isDirectory())
+            {
+                String[] children = dir.list();
+                if (children == null){
+
+                }else {
+                    for (int i = 0; i < children.length; i++) {
+                        new File(dir, children[i]).delete();
+                    }
+                }
+            }
+            Log.d("DirDelete","---"+"deleted");
+        }
+    }
 }

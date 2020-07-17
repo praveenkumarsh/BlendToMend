@@ -47,16 +47,16 @@ public class ImageProcessing {
         switch (mode){
             case "1":
 //                Toast.makeText(mContext,"Basic Mode 1 Selected",Toast.LENGTH_SHORT).show();
-                return basicMode1(previewMode);
+                return basicMode1(previewMode,mContext);
             case "2":
 //                Toast.makeText(mContext,"Basic Mode 2 Selected",Toast.LENGTH_SHORT).show();
-                return basicMode2(previewMode);
+                return basicMode2(previewMode,mContext);
             case "3":
 //                Toast.makeText(mContext,"Basic Mode 3 Selected",Toast.LENGTH_SHORT).show();
-                return basicMode3(previewMode);
+                return basicMode3(previewMode,mContext);
             case "4":
 //                Toast.makeText(mContext,"Intermediate Mode 1 Selected",Toast.LENGTH_SHORT).show();
-                return intermediateMode1(previewMode);
+                return intermediateMode1(previewMode,mContext);
             case "5":
 //                Toast.makeText(mContext,"Advanced Mode 1 Selected",Toast.LENGTH_SHORT).show();
                 return advancedMode1(previewMode);
@@ -74,7 +74,10 @@ public class ImageProcessing {
 
     }
 
-    public static String intermediateMode1(Boolean previewMode){
+    public static String intermediateMode1(Boolean previewMode,Context mContext){
+        if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
+            count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
+        }
         Log.d("ImageProcessing","In After Allignment");
         List<Mat> listImages = new ArrayList<>();
         int startPic = 0;
@@ -162,7 +165,10 @@ public class ImageProcessing {
 
     }
 
-    public static String basicMode3(Boolean previewMode){
+    public static String basicMode3(Boolean previewMode,Context mContext){
+        if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
+            count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
+        }
         Log.d("ImageProcessing","In After Allignment");
         List<Mat> listImages = new ArrayList<>();
         int startPic = 0;
@@ -244,7 +250,10 @@ public class ImageProcessing {
 
     }
 
-    public static String basicMode2(Boolean previewMode){
+    public static String basicMode2(Boolean previewMode,Context mContext){
+        if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
+            count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
+        }
         Log.d("ImageProcessing","In After Allignment");
         List<Mat> listImages = new ArrayList<>();
         int startPic = 0;
@@ -308,7 +317,10 @@ public class ImageProcessing {
         }
     }
 
-    public static String basicMode1(Boolean previewMode){
+    public static String basicMode1(Boolean previewMode,Context mContext){
+        if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
+            count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
+        }
         Log.d("ImageProcessing","In After Allignment");
         List<Mat> listImages = new ArrayList<>();
         int startPic = 0;
@@ -369,6 +381,9 @@ public class ImageProcessing {
     }
 
     public static String advancedMode3(Boolean previewMode){
+        if (count>10) {
+            count = 10;
+        }
         Log.d("ImageProcessing","In After Allignment");
         List<short[]> listImages = new ArrayList<>();
         int startPic = 0;
@@ -418,7 +433,12 @@ public class ImageProcessing {
             }
 
         }
-        String file_name = storageDir+"/processed"+"0"+".jpg";
+        String file_name;
+        if (previewMode) {
+            file_name = storageDir+"/preview"+"0"+".png";
+        } else{
+            file_name = storageDir + "/processed" + "0" + ".jpg";
+        }
         System.out.println(file_name);
 
         Mat finalimg = Imgcodecs.imread(file_name);
@@ -429,6 +449,7 @@ public class ImageProcessing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
+        listImages.clear();
         if (previewMode){
             Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalimg);
             Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
@@ -443,6 +464,9 @@ public class ImageProcessing {
     }
 
     public static String advancedMode2(Boolean previewMode){
+        if (count>10) {
+            count = 10;
+        }
         Log.d("ImageProcessing","In After Allignment");
         List<short[]> listImages = new ArrayList<>();
         int startPic = 0;
@@ -479,8 +503,12 @@ public class ImageProcessing {
             listImages.get(0)[i] = pi.size()<1?listImages.get(0)[i]:median(pi);
 
         }
-        String file_name = storageDir+"/processed"+"0"+".jpg";
-        System.out.println(file_name);
+        String file_name;
+        if (previewMode) {
+            file_name = storageDir+"/preview"+"0"+".png";
+        } else{
+            file_name = storageDir + "/processed" + "0" + ".jpg";
+        }
 
         Mat finalimg = Imgcodecs.imread(file_name);
 
@@ -490,6 +518,7 @@ public class ImageProcessing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
+        listImages.clear();
         if (previewMode){
             Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalimg);
             Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
@@ -504,6 +533,9 @@ public class ImageProcessing {
     }
 
     public static String advancedMode1(Boolean previewMode){
+        if (count>10) {
+            count = 10;
+        }
         Log.d("ImageProcessing","In After Allignment");
         List<short[]> listImages = new ArrayList<>();
         int startPic = 0;
@@ -540,7 +572,13 @@ public class ImageProcessing {
             listImages.get(0)[i] = pi.size()<1?listImages.get(0)[i]:median(pi);
 
         }
-        String file_name = storageDir+"/processed"+"0"+".jpg";
+
+        String file_name;
+        if (previewMode) {
+            file_name = storageDir+"/preview"+"0"+".png";
+        } else{
+            file_name = storageDir + "/processed" + "0" + ".jpg";
+        }
         System.out.println(file_name);
 
         Mat finalimg = Imgcodecs.imread(file_name);
@@ -551,6 +589,7 @@ public class ImageProcessing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
+        listImages.clear();
         if (previewMode){
             Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalimg);
             Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");

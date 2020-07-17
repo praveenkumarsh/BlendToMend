@@ -6,11 +6,58 @@
     android:layout_height="match_parent"
     tools:context=".ImageViewActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_camera"
+        android:text="Preview Mode"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center|top"
+        />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:background="#E0F1A9"
         android:layout_gravity="center"
          />
+
+    <Button
+        android:id="@+id/retake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="Retake"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:backgroundTint="#E0ABEEF4"
+        />
+
+    <Button
+        android:id="@+id/process"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="Process"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:backgroundTint="#E09BF492"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBarImageView"
+        style="?android:attr/progressBarStyle"
+        android:layout_gravity="center"
+        android:layout_width="150dp"
+        android:tint="@color/colorPrimary"
+        android:layout_height="150dp"
+        android:visibility="invisible"
+        />
+
 </FrameLayout>
