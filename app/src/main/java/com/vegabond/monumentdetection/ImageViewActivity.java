@@ -22,7 +22,7 @@ public class ImageViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_view);
 
         Intent intent = getIntent();
-        String str = intent.getStringExtra("res");
+        String str = intent.getStringExtra("imagePath");
         
         resOut = findViewById(R.id.imageView);
         File f=new File(str);

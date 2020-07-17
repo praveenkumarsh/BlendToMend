@@ -72,6 +72,17 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Experimental">
+
+        <SwitchPreferenceCompat
+            app:key="key_Preview"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Preview Final Before Processing" />
+
+
+    </PreferenceCategory>
+
 
     <PreferenceCategory app:title="Help">
 

@@ -41,31 +41,31 @@ import static org.opencv.imgproc.Imgproc.cvtColor;
 public class ImageProcessing {
 
 
-    static String imageProcess(Context mContext){
+    static String imageProcess(Context mContext,Boolean previewMode){
         String mode = SettingUtility.getControlSettings(mContext).getMode();
         Log.d("ModeCheck","Mode :"+mode);
         switch (mode){
             case "1":
 //                Toast.makeText(mContext,"Basic Mode 1 Selected",Toast.LENGTH_SHORT).show();
-                return basicMode1();
+                return basicMode1(previewMode);
             case "2":
 //                Toast.makeText(mContext,"Basic Mode 2 Selected",Toast.LENGTH_SHORT).show();
-                return basicMode2();
+                return basicMode2(previewMode);
             case "3":
 //                Toast.makeText(mContext,"Basic Mode 3 Selected",Toast.LENGTH_SHORT).show();
-                return basicMode3();
+                return basicMode3(previewMode);
             case "4":
 //                Toast.makeText(mContext,"Intermediate Mode 1 Selected",Toast.LENGTH_SHORT).show();
-                return intermediateMode1();
+                return intermediateMode1(previewMode);
             case "5":
 //                Toast.makeText(mContext,"Advanced Mode 1 Selected",Toast.LENGTH_SHORT).show();
-                return advancedMode1();
+                return advancedMode1(previewMode);
             case "6":
 //                Toast.makeText(mContext,"Advanced Mode 2 Selected",Toast.LENGTH_SHORT).show();
-                return advancedMode2();
+                return advancedMode2(previewMode);
             case "7":
 //                Toast.makeText(mContext,"Advanced Mode 3 Selected",Toast.LENGTH_SHORT).show();
-                return advancedMode3();
+                return advancedMode3(previewMode);
             default:
                 Toast.makeText(mContext,"Basic Mode 1 Selected",Toast.LENGTH_SHORT).show();
                 break;
@@ -74,14 +74,19 @@ public class ImageProcessing {
 
     }
 
-    public static String intermediateMode1(){
+    public static String intermediateMode1(Boolean previewMode){
         Log.d("ImageProcessing","In After Allignment");
         List<Mat> listImages = new ArrayList<>();
         int startPic = 0;
         int endPic = count-1;
         Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
         for (int i=startPic;i<=endPic;i++){
-            String file_name = storageDir+"/processed"+i+".jpg";
+            String file_name;
+            if (previewMode) {
+                file_name = storageDir+"/preview"+i+".png";
+            } else{
+                file_name = storageDir + "/processed" + i + ".jpg";
+            }
             Log.d("ImageProcessing","FilePath :"+file_name);
             Mat img = Imgcodecs.imread(file_name);
 
@@ -108,11 +113,13 @@ public class ImageProcessing {
                     List<Double> b = new ArrayList<>();
                     for (int k = 0; k < listImages.size(); k++) {
                         double[] rgb = listImages.get(k).get(i, j);
-                        if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
-                            r.add(rgb[0]);
-                            g.add(rgb[1]);
-                            b.add(rgb[2]);
-                            rgb_prev = rgb;
+                        if (rgb.length>=3) {
+                            if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
+                                r.add(rgb[0]);
+                                g.add(rgb[1]);
+                                b.add(rgb[2]);
+                                rgb_prev = rgb;
+                            }
                         }
                     }
                     red = r.size() < 1 ? rgb_prev[0] : medianDouble(r);
@@ -141,21 +148,33 @@ public class ImageProcessing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
-        Imgcodecs.imwrite(storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg", listImages.get(0));
-        Log.d("ImageProcessing","Saved :"+storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg");
+        if (previewMode){
+            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", listImages.get(0));
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
 
-        return storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg";
+            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
+        }else {
+            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", listImages.get(0));
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
+
+            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
+        }
 
     }
 
-    public static String basicMode3(){
+    public static String basicMode3(Boolean previewMode){
         Log.d("ImageProcessing","In After Allignment");
         List<Mat> listImages = new ArrayList<>();
         int startPic = 0;
         int endPic = count-1;
         Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
         for (int i=startPic;i<=endPic;i++){
-            String file_name = storageDir+"/processed"+i+".jpg";
+            String file_name;
+            if (previewMode) {
+                file_name = storageDir+"/preview"+i+".png";
+            } else{
+                file_name = storageDir + "/processed" + i + ".jpg";
+            }
             Log.d("ImageProcessing","FilePath :"+file_name);
             Mat img = Imgcodecs.imread(file_name);
 
@@ -176,11 +195,13 @@ public class ImageProcessing {
                     List<Double> b = new ArrayList<>();
                     for (int k = 0; k < listImages.size(); k++) {
                         double[] rgb = listImages.get(k).get(i, j);
-                        if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
-                            r.add(rgb[0]);
-                            g.add(rgb[1]);
-                            b.add(rgb[2]);
-                            rgb_prev = rgb;
+                        if (rgb.length>=3) {
+                            if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
+                                r.add(rgb[0]);
+                                g.add(rgb[1]);
+                                b.add(rgb[2]);
+                                rgb_prev = rgb;
+                            }
                         }
                     }
                     red = r.size() < 1 ? rgb_prev[0] : medianDouble(r);
@@ -209,21 +230,33 @@ public class ImageProcessing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
-        Imgcodecs.imwrite(storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg", listImages.get(0));
-        Log.d("ImageProcessing","Saved :"+storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg");
+        if (previewMode){
+            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", listImages.get(0));
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
 
-        return storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg";
+            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
+        }else {
+            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", listImages.get(0));
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
+
+            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
+        }
 
     }
 
-    public static String basicMode2(){
+    public static String basicMode2(Boolean previewMode){
         Log.d("ImageProcessing","In After Allignment");
         List<Mat> listImages = new ArrayList<>();
         int startPic = 0;
         int endPic = count-1;
         Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
         for (int i=startPic;i<=endPic;i++){
-            String file_name = storageDir+"/processed"+i+".jpg";
+            String file_name;
+            if (previewMode) {
+                file_name = storageDir+"/preview"+i+".png";
+            } else{
+                file_name = storageDir + "/processed" + i + ".jpg";
+            }
             Log.d("ImageProcessing","FilePath :"+file_name);
             Mat img = Imgcodecs.imread(file_name);
 
@@ -243,10 +276,12 @@ public class ImageProcessing {
                     List<Double> b = new ArrayList<>();
                     for (int k = 0; k < listImages.size(); k++) {
                         double[] rgb = listImages.get(k).get(i, j);
-                        if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
-                            r.add(rgb[0]);
-                            g.add(rgb[1]);
-                            b.add(rgb[2]);
+                        if (rgb.length>=3) {
+                            if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
+                                r.add(rgb[0]);
+                                g.add(rgb[1]);
+                                b.add(rgb[2]);
+                            }
                         }
                     }
                     double red = medianDouble(r);
@@ -260,20 +295,32 @@ public class ImageProcessing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
-        Imgcodecs.imwrite(storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg", listImages.get(0));
-        Log.d("ImageProcessing","Saved :"+storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg");
+        if (previewMode){
+            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", listImages.get(0));
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
 
-        return storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg";
+            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
+        }else {
+            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", listImages.get(0));
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
+
+            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
+        }
     }
 
-    public static String basicMode1(){
+    public static String basicMode1(Boolean previewMode){
         Log.d("ImageProcessing","In After Allignment");
         List<Mat> listImages = new ArrayList<>();
         int startPic = 0;
         int endPic = count-1;
         Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
-        for (int i=startPic;i<=endPic;i++){
-            String file_name = storageDir+"/processed"+i+".jpg";
+        for (int i=startPic;i<=endPic;i++) {
+            String file_name;
+            if (previewMode) {
+                file_name = storageDir+"/preview"+i+".png";
+            } else{
+                file_name = storageDir + "/processed" + i + ".jpg";
+            }
             Log.d("ImageProcessing","FilePath :"+file_name);
             Mat img = Imgcodecs.imread(file_name);
 
@@ -290,10 +337,12 @@ public class ImageProcessing {
                 List<Double> b = new ArrayList<>();
                 for (int k = 0; k < listImages.size(); k++) {
                     double[] rgb = listImages.get(k).get(i, j);
-                    if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
-                        r.add(rgb[0]);
-                        g.add(rgb[1]);
-                        b.add(rgb[2]);
+                    if (rgb.length>=3) {
+                        if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
+                            r.add(rgb[0]);
+                            g.add(rgb[1]);
+                            b.add(rgb[2]);
+                        }
                     }
                 }
                 double red = medianDouble(r);
@@ -306,20 +355,32 @@ public class ImageProcessing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
-        Imgcodecs.imwrite(storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg", listImages.get(0));
-        Log.d("ImageProcessing","Saved :"+storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg");
+        if (previewMode){
+            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", listImages.get(0));
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
 
-        return storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg";
+            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
+        }else {
+            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", listImages.get(0));
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
+
+            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
+        }
     }
 
-    public static String advancedMode3(){
+    public static String advancedMode3(Boolean previewMode){
         Log.d("ImageProcessing","In After Allignment");
         List<short[]> listImages = new ArrayList<>();
         int startPic = 0;
         int endPic = count-1;
         Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
         for (int i=startPic;i<=endPic;i++){
-            String file_name = storageDir+"/processed"+i+".jpg";
+            String file_name;
+            if (previewMode) {
+                file_name = storageDir+"/preview"+i+".png";
+            } else{
+                file_name = storageDir + "/processed" + i + ".jpg";
+            }
             Log.d("ImageProcessing","FilePath :"+file_name);
             Mat img = Imgcodecs.imread(file_name);
 
@@ -368,20 +429,32 @@ public class ImageProcessing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
-        Imgcodecs.imwrite(storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg", finalimg);
-        Log.d("ImageProcessing","Saved :"+storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg");
+        if (previewMode){
+            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalimg);
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
 
-        return storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg";
+            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
+        }else {
+            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", finalimg);
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
+
+            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
+        }
     }
 
-    public static String advancedMode2(){
+    public static String advancedMode2(Boolean previewMode){
         Log.d("ImageProcessing","In After Allignment");
         List<short[]> listImages = new ArrayList<>();
         int startPic = 0;
         int endPic = count-1;
         Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
         for (int i=startPic;i<=endPic;i++){
-            String file_name = storageDir+"/processed"+i+".jpg";
+            String file_name;
+            if (previewMode) {
+                file_name = storageDir+"/preview"+i+".png";
+            } else{
+                file_name = storageDir + "/processed" + i + ".jpg";
+            }
             Log.d("ImageProcessing","FilePath :"+file_name);
             Mat img = Imgcodecs.imread(file_name);
 
@@ -417,20 +490,32 @@ public class ImageProcessing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
-        Imgcodecs.imwrite(storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg", finalimg);
-        Log.d("ImageProcessing","Saved :"+storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg");
+        if (previewMode){
+            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalimg);
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
 
-        return storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg";
+            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
+        }else {
+            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", finalimg);
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
+
+            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
+        }
     }
 
-    public static String advancedMode1(){
+    public static String advancedMode1(Boolean previewMode){
         Log.d("ImageProcessing","In After Allignment");
         List<short[]> listImages = new ArrayList<>();
         int startPic = 0;
         int endPic = count-1;
         Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
         for (int i=startPic;i<=endPic;i++){
-            String file_name = storageDir+"/processed"+i+".jpg";
+            String file_name;
+            if (previewMode) {
+                file_name = storageDir+"/preview"+i+".png";
+            } else{
+                file_name = storageDir + "/processed" + i + ".jpg";
+            }
             Log.d("ImageProcessing","FilePath :"+file_name);
             Mat img = Imgcodecs.imread(file_name);
 
@@ -466,10 +551,17 @@ public class ImageProcessing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
 
-        Imgcodecs.imwrite(storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg", finalimg);
-        Log.d("ImageProcessing","Saved :"+storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg");
+        if (previewMode){
+            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalimg);
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
 
-        return storageDirMain+"/"+"MONUMENT_"+currentTimeStamp+".jpg";
+            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
+        }else {
+            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", finalimg);
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
+
+            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
+        }
     }
 
 

@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -45,6 +47,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -478,12 +481,19 @@ public class Camera2BasicFragment extends Fragment
                 }
 
                 // For still image captures, we use the largest available size.
-                Size[] siz = map.getOutputSizes(ImageFormat.JPEG);
-                Arrays.sort(siz, new CompareSizesByArea());
-                Size largest = siz[siz.length-3];
-//                Size largest = Collections.max(
-//                        Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
-//                        new CompareSizesByArea());
+                Size largest;
+                if (Integer.parseInt(SettingUtility.getControlSettings(getContext()).getMode())>4){
+//                    Size[] siz = map.getOutputSizes(ImageFormat.JPEG);
+//                    Arrays.sort(siz, new CompareSizesByArea());
+//                    largest = siz[siz.length-3];
+//                    Log.d("Size","Size :"+largest.getHeight()+" "+largest.getWidth());
+                    largest = new Size(3840,2160);
+                }else{
+                    largest = Collections.max(
+                            Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
+                            new CompareSizesByArea());
+                }
+
                 mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
                         ImageFormat.JPEG, /*maxImages*/2);
                 mImageReader.setOnImageAvailableListener(
@@ -874,24 +884,37 @@ public class Camera2BasicFragment extends Fragment
 
 //                                    afterProgress.setVisibility(View.VISIBLE);
 //                                    afterInfo.setVisibility(View.VISIBLE);
-                                    String res  = ImageProcessing.imageProcess(getContext());
-                                    progress.setVisibility(View.INVISIBLE);
-                                    capture.setImageResource(R.drawable.ic_capture);
-                                    capture.setClickable(true);
+                                    if (SettingUtility.getControlSettings(getContext()).getPreviewMode()){
+                                        generatePreview();
+                                        String res = ImageProcessing.imageProcess(getContext(),true);
+                                        progress.setVisibility(View.INVISIBLE);
+                                        capture.setImageResource(R.drawable.ic_capture);
+                                        capture.setClickable(true);
+                                        if (!res.equals("")) {
+                                            Intent intent = new Intent(getActivity(), ImageViewActivity.class);
+                                            intent.putExtra("imagePath",res);
+                                            startActivity(intent);
+                                        }
+                                    }else {
+                                        String res = ImageProcessing.imageProcess(getContext(),false);
+                                        progress.setVisibility(View.INVISIBLE);
+                                        capture.setImageResource(R.drawable.ic_capture);
+                                        capture.setClickable(true);
 //                                    if (!setting.getStoreOriginal()){
 //                                        storageDir.delete();
 //                                    }
 //                                    afterProgress.setVisibility(View.INVISIBLE);
 //                                    afterInfo.setVisibility(View.INVISIBLE);
 
-                                    if (res!=""){
-                                        File file = new File(res);
-                                        final Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
-                                                        FileProvider.getUriForFile(getContext(),getContext().getPackageName() + ".provider", file)
-                                                        : Uri.fromFile(file),
-                                                "image/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                        startActivity(intent);
+                                        if (!res .equals("")) {
+                                            File file = new File(res);
+                                            final Intent intent = new Intent(Intent.ACTION_VIEW);
+                                            intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
+                                                            FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", file)
+                                                            : Uri.fromFile(file),
+                                                    "image/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                            startActivity(intent);
+                                        }
                                     }
 //                                    return;
                                 }
@@ -902,6 +925,27 @@ public class Camera2BasicFragment extends Fragment
                 }
                 break;
             }
+        }
+    }
+
+    public void generatePreview(){
+        int startPic = 0;
+        int endPic = count-1;
+        Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
+        for (int i=startPic;i<=endPic;i++) {
+            String file_name = storageDir + "/processed" + i + ".jpg";
+            Bitmap b= BitmapFactory.decodeFile(file_name);
+            Bitmap out = Bitmap.createScaledBitmap(b, 320, 480, false);
+            File file = new File(storageDir+"/preview"+i+".png");
+            FileOutputStream fOut;
+            try {
+                fOut = new FileOutputStream(file);
+                out.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                fOut.flush();
+                fOut.close();
+                b.recycle();
+                out.recycle();
+            } catch (Exception e) {}
         }
     }
 
