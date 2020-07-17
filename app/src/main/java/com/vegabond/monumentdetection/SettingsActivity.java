@@ -97,6 +97,26 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
+            //============================Developer=================================================
+
+            PreferenceScreen preferenceDeveloper = findPreference("Developer");
+            preferenceDeveloper.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    developerPage();
+                    return true;
+                }
+            });
+
+
+        }
+
+        static void developerPage(){
+            String url = "https://praveensharma.cf/MonumentDetection_Developer";
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(i);
 
         }
 

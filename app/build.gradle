@@ -8,8 +8,8 @@ android {
         applicationId "com.vegabond.monumentdetection"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.6-beta"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

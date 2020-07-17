@@ -8,7 +8,7 @@
             android:icon="@drawable/ic_camera"
             android:key="Developer"
             android:title="Developed By : "
-            android:summary="Email ID : ">
+            android:summary="\t1. Praveen Kumar Sharma \n\t2. Anukriti \n\t3. Daksh">
         </PreferenceScreen>
 
         <PreferenceScreen
