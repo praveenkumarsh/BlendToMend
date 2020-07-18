@@ -59,6 +59,8 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.vegabond.monumentdetection.recentcaptureutility.CustomGalleryActivity;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
@@ -91,6 +93,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import static android.media.MediaActionSound.FOCUS_COMPLETE;
+import static com.vegabond.monumentdetection.getstoragepath.storagePath.searchRecentCapturingPaths;
 
 public class Camera2BasicFragment extends Fragment
         implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -347,7 +350,7 @@ public class Camera2BasicFragment extends Fragment
         return inflater.inflate(R.layout.fragment_camera2_basic, container, false);
     }
 
-    private ImageButton ibsettings,capture;
+    private ImageButton ibsettings,capture,recent;
     static SettingUtility.SettingsControl setting;
     private TextView notice,info;
     private ProgressBar progress;
@@ -367,7 +370,7 @@ public class Camera2BasicFragment extends Fragment
         info = view.findViewById(R.id.TVInfo);
         progress = view.findViewById(R.id.PBprogress);
         capture = view.findViewById(R.id.IBcapture);
-//        recent = view.findViewById(R.id.IBrecent);
+        recent = view.findViewById(R.id.IBrecent);
 //
 //        recent.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -375,6 +378,18 @@ public class Camera2BasicFragment extends Fragment
 //                Toast.makeText(getContext(),"Recent Pic View, Coming Soon...",Toast.LENGTH_SHORT).show();
 //            }
 //        });
+
+        recent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (searchRecentCapturingPaths().length != 0) {
+                    Intent intent = new Intent(getActivity(), CustomGalleryActivity.class);
+                    intent.putExtra("location", "Monument");
+                    startActivity(intent);
+                }
+            }
+        });
 
         ibsettings = view.findViewById(R.id.IBmenu);
         ibsettings.setOnClickListener(new View.OnClickListener() {
@@ -841,6 +856,7 @@ public class Camera2BasicFragment extends Fragment
                     info.setVisibility(View.VISIBLE);
                     capture.setImageResource(R.drawable.ic_camera_white);
                     capture.setClickable(false);
+                    recent.setClickable(false);
 
                     final int[] maxSnap = {Integer.parseInt(setting.getMaxPhoto())};
                     final int maxGap = Integer.parseInt(setting.getSnapDuration());
@@ -880,6 +896,7 @@ public class Camera2BasicFragment extends Fragment
                                     notice.setVisibility(View.INVISIBLE);
                                     info.setVisibility(View.INVISIBLE);
 
+
                                     mHandler.post(mUpdateResults);
 
                                     if (SettingUtility.getControlSettings(getContext()).getPreviewMode()){
@@ -888,6 +905,7 @@ public class Camera2BasicFragment extends Fragment
                                         progress.setVisibility(View.INVISIBLE);
                                         capture.setImageResource(R.drawable.ic_capture);
                                         capture.setClickable(true);
+                                        recent.setClickable(true);
                                         if (!res.equals("")) {
                                             Intent intent = new Intent(getActivity(), ImageViewActivity.class);
                                             intent.putExtra("imagePath",res);
@@ -898,6 +916,7 @@ public class Camera2BasicFragment extends Fragment
                                         progress.setVisibility(View.INVISIBLE);
                                         capture.setImageResource(R.drawable.ic_capture);
                                         capture.setClickable(true);
+                                        recent.setClickable(true);
 
                                         if (!res .equals("")) {
                                             File file = new File(res);

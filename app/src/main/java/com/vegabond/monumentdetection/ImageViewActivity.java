@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static com.vegabond.monumentdetection.Camera2BasicFragment.count;
 

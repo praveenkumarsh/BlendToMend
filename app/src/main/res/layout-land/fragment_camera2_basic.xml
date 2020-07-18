@@ -156,6 +156,16 @@
 <!--                android:layout_gravity="center|bottom"-->
 <!--                android:background="@drawable/round_button" />-->
 
+            <ImageButton
+                android:id="@+id/IBrecent"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:maxWidth="50dp"
+                android:maxHeight="50dp"
+                android:layout_marginBottom="50dp"
+                android:layout_gravity="center|bottom"
+                android:background="@drawable/recent" />
+
 
             <ImageButton
                 android:id="@+id/IBcapture"
