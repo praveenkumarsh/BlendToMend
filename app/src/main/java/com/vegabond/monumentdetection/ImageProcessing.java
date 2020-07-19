@@ -44,37 +44,62 @@ public class ImageProcessing {
     static String imageProcess(Context mContext,Boolean previewMode){
         String mode = SettingUtility.getControlSettings(mContext).getMode();
         Log.d("ModeCheck","Mode :"+mode);
+        Mat finalMatImage = new Mat();
         switch (mode){
             case "1":
 //                Toast.makeText(mContext,"Basic Mode 1 Selected",Toast.LENGTH_SHORT).show();
-                return basicMode1(previewMode,mContext);
+                finalMatImage =  basicMode1(previewMode,mContext);
+                break;
             case "2":
 //                Toast.makeText(mContext,"Basic Mode 2 Selected",Toast.LENGTH_SHORT).show();
-                return basicMode2(previewMode,mContext);
+                finalMatImage =  basicMode2(previewMode,mContext);
+                break;
             case "3":
 //                Toast.makeText(mContext,"Basic Mode 3 Selected",Toast.LENGTH_SHORT).show();
-                return basicMode3(previewMode,mContext);
+                finalMatImage =  basicMode3(previewMode,mContext);
+                break;
             case "4":
 //                Toast.makeText(mContext,"Intermediate Mode 1 Selected",Toast.LENGTH_SHORT).show();
-                return intermediateMode1(previewMode,mContext);
+                finalMatImage =  intermediateMode1(previewMode,mContext);
+                break;
             case "5":
 //                Toast.makeText(mContext,"Advanced Mode 1 Selected",Toast.LENGTH_SHORT).show();
-                return advancedMode1(previewMode);
+                finalMatImage = advancedMode1(previewMode);
+                break;
             case "6":
 //                Toast.makeText(mContext,"Advanced Mode 2 Selected",Toast.LENGTH_SHORT).show();
-                return advancedMode2(previewMode);
+                finalMatImage = advancedMode2(previewMode);
+                break;
             case "7":
 //                Toast.makeText(mContext,"Advanced Mode 3 Selected",Toast.LENGTH_SHORT).show();
-                return advancedMode3(previewMode);
+                finalMatImage = advancedMode3(previewMode);
+                break;
             default:
-                Toast.makeText(mContext,"Basic Mode 1 Selected",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext,"Basic Mode 1 Selected",Toast.LENGTH_SHORT).show();
                 break;
         }
-        return "";
+
+        finalMatImage = PostProcessing.removeBlackBorder(mContext,finalMatImage);
+        finalMatImage = PostProcessing.postProcessImage(mContext,finalMatImage);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+        final String currentTimeStamp = dateFormat.format(new Date());
+
+        if (previewMode){
+            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalMatImage);
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
+
+            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
+        }else {
+            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", finalMatImage);
+            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
+
+            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
+        }
 
     }
 
-    public static String intermediateMode1(Boolean previewMode,Context mContext){
+    public static Mat intermediateMode1(Boolean previewMode,Context mContext){
         if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
             count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
         }
@@ -117,12 +142,11 @@ public class ImageProcessing {
                     for (int k = 0; k < listImages.size(); k++) {
                         double[] rgb = listImages.get(k).get(i, j);
                         if (rgb.length>=3) {
-                            if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
                                 r.add(rgb[0]);
                                 g.add(rgb[1]);
                                 b.add(rgb[2]);
                                 rgb_prev = rgb;
-                            }
+
                         }
                     }
                     red = r.size() < 1 ? rgb_prev[0] : medianDouble(r);
@@ -148,24 +172,11 @@ public class ImageProcessing {
             }
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
-        final String currentTimeStamp = dateFormat.format(new Date());
-
-        if (previewMode){
-            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", listImages.get(0));
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
-        }else {
-            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", listImages.get(0));
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
-        }
+        return listImages.get(0);
 
     }
 
-    public static String basicMode3(Boolean previewMode,Context mContext){
+    public static Mat basicMode3(Boolean previewMode,Context mContext){
         if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
             count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
         }
@@ -202,12 +213,11 @@ public class ImageProcessing {
                     for (int k = 0; k < listImages.size(); k++) {
                         double[] rgb = listImages.get(k).get(i, j);
                         if (rgb.length>=3) {
-                            if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
                                 r.add(rgb[0]);
                                 g.add(rgb[1]);
                                 b.add(rgb[2]);
                                 rgb_prev = rgb;
-                            }
+
                         }
                     }
                     red = r.size() < 1 ? rgb_prev[0] : medianDouble(r);
@@ -233,24 +243,11 @@ public class ImageProcessing {
             }
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
-        final String currentTimeStamp = dateFormat.format(new Date());
-
-        if (previewMode){
-            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", listImages.get(0));
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
-        }else {
-            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", listImages.get(0));
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
-        }
+        return listImages.get(0);
 
     }
 
-    public static String basicMode2(Boolean previewMode,Context mContext){
+    public static Mat basicMode2(Boolean previewMode,Context mContext){
         if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
             count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
         }
@@ -286,11 +283,9 @@ public class ImageProcessing {
                     for (int k = 0; k < listImages.size(); k++) {
                         double[] rgb = listImages.get(k).get(i, j);
                         if (rgb.length>=3) {
-                            if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
                                 r.add(rgb[0]);
                                 g.add(rgb[1]);
                                 b.add(rgb[2]);
-                            }
                         }
                     }
                     double red = medianDouble(r);
@@ -301,23 +296,10 @@ public class ImageProcessing {
             }
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
-        final String currentTimeStamp = dateFormat.format(new Date());
-
-        if (previewMode){
-            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", listImages.get(0));
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
-        }else {
-            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", listImages.get(0));
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
-        }
+       return listImages.get(0);
     }
 
-    public static String basicMode1(Boolean previewMode,Context mContext){
+    public static Mat basicMode1(Boolean previewMode,Context mContext){
         if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
             count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
         }
@@ -350,11 +332,9 @@ public class ImageProcessing {
                 for (int k = 0; k < listImages.size(); k++) {
                     double[] rgb = listImages.get(k).get(i, j);
                     if (rgb.length>=3) {
-                        if (rgb[0] != 0 && rgb[1] != 0 && rgb[2] != 0) {
                             r.add(rgb[0]);
                             g.add(rgb[1]);
                             b.add(rgb[2]);
-                        }
                     }
                 }
                 double red = medianDouble(r);
@@ -364,23 +344,10 @@ public class ImageProcessing {
             }
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
-        final String currentTimeStamp = dateFormat.format(new Date());
-
-        if (previewMode){
-            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", listImages.get(0));
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
-        }else {
-            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", listImages.get(0));
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
-        }
+        return listImages.get(0);
     }
 
-    public static String advancedMode3(Boolean previewMode){
+    public static Mat advancedMode3(Boolean previewMode){
         if (count>10) {
             count = 10;
         }
@@ -415,9 +382,8 @@ public class ImageProcessing {
         for (int i = listImages.get(0).length / 2; i < listImages.get(0).length; i++) {
             List<Short> pi = new ArrayList<>();
             for (int j = 0; j < listImages.size(); j++) {
-                if (listImages.get(j)[i] != 0) {
                     pi.add(listImages.get(j)[i]);
-                }
+
             }
             Short currentPixel = pi.size() < 1 ? listImages.get(0)[i] : median(pi);
             Short range = 0;
@@ -446,24 +412,12 @@ public class ImageProcessing {
         finalimg.convertTo(finalimg, CvType.CV_16SC3);
         finalimg.put(0, 0, listImages.get(0));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
-        final String currentTimeStamp = dateFormat.format(new Date());
-
         listImages.clear();
-        if (previewMode){
-            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalimg);
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
 
-            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
-        }else {
-            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", finalimg);
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
-        }
+        return finalimg;
     }
 
-    public static String advancedMode2(Boolean previewMode){
+    public static Mat advancedMode2(Boolean previewMode){
         if (count>10) {
             count = 10;
         }
@@ -496,9 +450,8 @@ public class ImageProcessing {
         for (int i = listImages.get(0).length/2; i < listImages.get(0).length; i++) {
             List<Short> pi = new ArrayList<>();
             for (int j = 0; j < listImages.size(); j++) {
-                if (listImages.get(j)[i]!=0) {
                     pi.add(listImages.get(j)[i]);
-                }
+
             }
             listImages.get(0)[i] = pi.size()<1?listImages.get(0)[i]:median(pi);
 
@@ -515,24 +468,12 @@ public class ImageProcessing {
         finalimg.convertTo(finalimg, CvType.CV_16SC3);
         finalimg.put(0, 0, listImages.get(0));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
-        final String currentTimeStamp = dateFormat.format(new Date());
-
         listImages.clear();
-        if (previewMode){
-            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalimg);
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
 
-            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
-        }else {
-            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", finalimg);
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
-        }
+        return finalimg;
     }
 
-    public static String advancedMode1(Boolean previewMode){
+    public static Mat advancedMode1(Boolean previewMode){
         if (count>10) {
             count = 10;
         }
@@ -565,9 +506,9 @@ public class ImageProcessing {
         for (int i = 0; i < listImages.get(0).length; i++) {
             List<Short> pi = new ArrayList<>();
             for (int j = 0; j < listImages.size(); j++) {
-                if (listImages.get(j)[i]!=0) {
+
                     pi.add(listImages.get(j)[i]);
-                }
+
             }
             listImages.get(0)[i] = pi.size()<1?listImages.get(0)[i]:median(pi);
 
@@ -586,21 +527,9 @@ public class ImageProcessing {
         finalimg.convertTo(finalimg, CvType.CV_16SC3);
         finalimg.put(0, 0, listImages.get(0));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
-        final String currentTimeStamp = dateFormat.format(new Date());
-
         listImages.clear();
-        if (previewMode){
-            Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalimg);
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg");
 
-            return storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg";
-        }else {
-            Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", finalimg);
-            Log.d("ImageProcessing", "Saved :" + storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg");
-
-            return storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg";
-        }
+        return finalimg;
     }
 
 
@@ -611,7 +540,12 @@ public class ImageProcessing {
         int totalElements = values.size();
         if (totalElements % 2 == 0) {
             short sumOfMiddleElements = (short) (values.get(totalElements / 2) + values.get(totalElements / 2 - 1));
-            median = (short) (sumOfMiddleElements / 2);
+            int medianCandidate = sumOfMiddleElements / 2;
+            if (Math.abs(medianCandidate-values.get(totalElements/2))>Math.abs(medianCandidate-values.get(totalElements/2-1))){
+                median = (short) values.get(totalElements/2-1);
+            }else{
+                median = (short) values.get(totalElements/2);
+            }
         } else {
             median = values.get(values.size() / 2);
         }
@@ -626,7 +560,12 @@ public class ImageProcessing {
         int totalElements = values.size();
         if (totalElements % 2 == 0) {
             double sumOfMiddleElements = (double) (values.get(totalElements / 2) + values.get(totalElements / 2 - 1));
-            median = (double) (sumOfMiddleElements / 2);
+            double medianCandidate = sumOfMiddleElements / 2;
+            if (Math.abs(medianCandidate-values.get(totalElements/2))>Math.abs(medianCandidate-values.get(totalElements/2-1))){
+                median = (double) values.get(totalElements/2-1);
+            }else{
+                median = (double) values.get(totalElements/2);
+            }
         } else {
             median = values.get(values.size() / 2);
         }

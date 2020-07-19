@@ -17,8 +17,11 @@ public class SettingUtility {
         String maxPhoto = preferences.getString("key_MaximumPhoto","10");
         String mode = preferences.getString("key_Mode","1");
         Boolean previewMode = preferences.getBoolean("key_Preview",true);
+        Boolean postCaptureProcess = preferences.getBoolean("key_PostCaptureProcess",true);
+        Boolean removeBlackBorder = preferences.getBoolean("key_RemoveBlackBorder",true);
+        Boolean postCaptureProcessMode = preferences.getBoolean("key_PostCaptureProcessMode",true);
 
-        return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode,previewMode);
+        return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode,previewMode,postCaptureProcess,removeBlackBorder,postCaptureProcessMode);
     }
 
     public static class SettingsControl {
@@ -28,17 +31,46 @@ public class SettingUtility {
         Boolean StoreOriginal;
         String Mode;
         Boolean PreviewMode;
+        Boolean PostCaptureProcess;
+        Boolean RemoveBlackBorder;
+        Boolean PostCaptureProcessMode;
 
-        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode,Boolean previewMode) {
+        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode,Boolean previewMode,Boolean postCaptureProcess,Boolean removeBlackBorder,Boolean postCaptureProcessMode) {
             DetectionMode = detectionMode;
             SnapDuration = snapDuration;
             MaxPhoto = maxPhoto;
             StoreOriginal = storeOriginal;
             Mode = mode;
             PreviewMode = previewMode;
+            PostCaptureProcess = postCaptureProcess;
+            RemoveBlackBorder = removeBlackBorder;
+            PostCaptureProcessMode = postCaptureProcessMode;
+
         }
 
+        public Boolean getPostCaptureProcess() {
+            return PostCaptureProcess;
+        }
 
+        public void setPostCaptureProcess(Boolean postCaptureProcess) {
+            PostCaptureProcess = postCaptureProcess;
+        }
+
+        public Boolean getRemoveBlackBorder() {
+            return RemoveBlackBorder;
+        }
+
+        public void setRemoveBlackBorder(Boolean removeBlackBorder) {
+            RemoveBlackBorder = removeBlackBorder;
+        }
+
+        public Boolean getPostCaptureProcessMode() {
+            return PostCaptureProcessMode;
+        }
+
+        public void setPostCaptureProcessMode(Boolean postCaptureProcessMode) {
+            PostCaptureProcessMode = postCaptureProcessMode;
+        }
 
         public Boolean getDetectionMode() {
             return DetectionMode;

@@ -80,6 +80,30 @@
             app:defaultValue="true"
             app:title="Preview Final Before Processing" />
 
+        <SwitchPreferenceCompat
+            app:key="key_PostCaptureProcess"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Post Capturing Process" />
+
+        <SwitchPreferenceCompat
+            android:dependency="key_PostCaptureProcess"
+            app:key="key_RemoveBlackBorder"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Auto Handle Black Border" />
+
+        <SwitchPreferenceCompat
+            android:dependency="key_PostCaptureProcess"
+            app:key="key_PostCaptureProcessMode"
+            android:checked="true"
+            app:defaultValue="true"
+            app:summaryOff="Manual"
+            app:summaryOn="Auto"
+            app:switchTextOn="Auto"
+            app:title="Post Capturing Process Mode" />
+
+
 
     </PreferenceCategory>
 
