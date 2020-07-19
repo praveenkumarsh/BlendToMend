@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ImageViewActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manual Mode"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center|top"
+        />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:background="#E0F1A9" />
+
+    <Button
+        android:id="@+id/btnImageToBW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="90dp"
+        android:backgroundTint="#E0ABEEF4"
+        android:text="B &amp; W"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnImageToGray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="90dp"
+        android:text="Grey Color"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:backgroundTint="#E0ABEEF4"
+        />
+
+    <Button
+        android:id="@+id/btnImageSmoothen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="90dp"
+        android:text="Smoothen Image"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:backgroundTint="#E09BF492"
+        />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="Save Image"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:backgroundTint="#E09BF492"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBarImageEnhance"
+        style="?android:attr/progressBarStyle"
+        android:layout_gravity="center"
+        android:layout_width="150dp"
+        android:tint="@color/colorPrimary"
+        android:layout_height="150dp"
+        android:visibility="invisible"
+        />
+
+
+
+</FrameLayout>

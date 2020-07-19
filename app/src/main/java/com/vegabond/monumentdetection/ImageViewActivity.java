@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.vegabond.monumentdetection.cropblack.ImageCropActivity;
+import com.vegabond.monumentdetection.cropblack.helpers.MyConstants;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -70,14 +73,15 @@ public class ImageViewActivity extends AppCompatActivity {
                         findViewById(R.id.retake).setClickable(true);
                         if (!res .equals("")) {
                             File file = new File(res);
-                            final Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
-                                            FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", file)
+                            boolean check = PostProcessing.removeBlackBorder(ImageViewActivity.this,res);
+                            if (!check){
+                                final Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
+                                                FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", file)
                                             : Uri.fromFile(file),
                                     "image/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            startActivity(intent);
-
-
+                                startActivity(intent);
+                            }
                         }
 
                     }

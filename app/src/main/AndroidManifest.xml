@@ -17,6 +17,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".recentcaptureutility.CustomGalleryActivity"></activity>
         <activity android:name=".ImageViewActivity"></activity>
+        <activity android:name=".cropblack.ImageCropActivity"></activity>
+        <activity android:name=".cropblack.ImageEnhanceActivity"></activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />

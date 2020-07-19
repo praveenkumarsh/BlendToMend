@@ -79,7 +79,7 @@ public class ImageProcessing {
                 break;
         }
 
-        finalMatImage = PostProcessing.removeBlackBorder(mContext,finalMatImage);
+//        finalMatImage = PostProcessing.removeBlackBorder(mContext,finalMatImage);
         finalMatImage = PostProcessing.postProcessImage(mContext,finalMatImage);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");

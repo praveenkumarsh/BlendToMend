@@ -356,7 +356,7 @@ public class Camera2BasicFragment extends Fragment
     private ProgressBar progress;
     static int count = 0;
     static File storageDir;
-    static File storageDirMain;
+    public static File storageDirMain;
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -920,12 +920,15 @@ public class Camera2BasicFragment extends Fragment
 
                                         if (!res .equals("")) {
                                             File file = new File(res);
-                                            final Intent intent = new Intent(Intent.ACTION_VIEW);
-                                            intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
-                                                            FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", file)
-                                                            : Uri.fromFile(file),
-                                                    "image/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                            startActivity(intent);
+                                            boolean check = PostProcessing.removeBlackBorder(getActivity(),res);
+                                            if (!check){
+                                                final Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
+                                                                FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", file)
+                                                                : Uri.fromFile(file),
+                                                        "image/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                                startActivity(intent);
+                                            }
                                         }
                                     }
                                 }
