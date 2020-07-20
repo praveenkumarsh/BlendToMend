@@ -7,10 +7,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
@@ -56,6 +58,40 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+            //======================================================================================
+            final ListPreference processing_mode = (ListPreference)findPreference("key_Processing_Mode");
+            final SwitchPreferenceCompat removeBlackBorder = findPreference("key_RemoveBlackBorder");
+            final ListPreference image_enhance_mode = (ListPreference)findPreference("key_Image_Enhance_Mode");
+            removeBlackBorder.setEnabled(false);
+            image_enhance_mode.setEnabled(false);
+            if (processing_mode.getValue()=="1"){
+                removeBlackBorder.setEnabled(false);
+                image_enhance_mode.setEnabled(false);
+            }else{
+                removeBlackBorder.setEnabled(true);
+                image_enhance_mode.setEnabled(true);
+            }
+
+            processing_mode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    final String val = newValue.toString();
+                    Log.d("Value",val);
+                    int index = processing_mode.findIndexOfValue(val);
+                    if(index==1) {
+                        removeBlackBorder.setEnabled(true);
+                        image_enhance_mode.setEnabled(true);
+                    } else {
+                        removeBlackBorder.setEnabled(false);
+                        image_enhance_mode.setEnabled(false);
+                    }
+                    return true;
+                }
+            });
+
+
+
+            //======================================================================================
 
 //            SwitchPreferenceCompat preferenceSet = findPreference("key_monumentDetectionModeState");
 //            if (preferenceSet != null) {

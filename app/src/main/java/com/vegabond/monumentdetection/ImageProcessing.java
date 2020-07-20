@@ -2,9 +2,13 @@ package com.vegabond.monumentdetection;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
 
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
@@ -37,6 +41,7 @@ import static com.vegabond.monumentdetection.Camera2BasicFragment.setting;
 import static com.vegabond.monumentdetection.Camera2BasicFragment.storageDir;
 import static com.vegabond.monumentdetection.Camera2BasicFragment.storageDirMain;
 import static org.opencv.imgproc.Imgproc.cvtColor;
+import static org.opencv.imgproc.Imgproc.equalizeHist;
 
 public class ImageProcessing {
 
@@ -80,7 +85,29 @@ public class ImageProcessing {
         }
 
 //        finalMatImage = PostProcessing.removeBlackBorder(mContext,finalMatImage);
-        finalMatImage = PostProcessing.postProcessImage(mContext,finalMatImage);
+        //==========================================================================================
+        //==========================Auto Mode Processing Options set================================
+        if (SettingUtility.getControlSettings(mContext).getProcessingMode().equals("1")&&!previewMode){
+            if (SettingUtility.getControlSettings(mContext).getRemoveBlackBorder()){
+                //To be handle while image is processing
+                finalMatImage = PostProcessing.autoCrop(finalMatImage);
+            }
+            String enhancemode = SettingUtility.getControlSettings(mContext).getEnhanceMode();
+            switch (enhancemode){
+                case "0":
+                    break;
+                case "1":
+                    finalMatImage = PostProcessing.smoothenImage(mContext,finalMatImage);
+                    break;
+                case "2":
+                    finalMatImage = PostProcessing.bandw(mContext,finalMatImage);
+                    break;
+                case "3":
+                    finalMatImage = PostProcessing.grayScale(mContext,finalMatImage);
+                    break;
+            }
+
+        }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());

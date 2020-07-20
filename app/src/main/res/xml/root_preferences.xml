@@ -80,29 +80,27 @@
             app:defaultValue="true"
             app:title="Preview Final Before Processing" />
 
-        <SwitchPreferenceCompat
-            app:key="key_PostCaptureProcess"
-            android:checked="true"
-            app:defaultValue="true"
-            app:title="Post Capturing Process" />
+        <ListPreference
+            app:key="key_Processing_Mode"
+            app:defaultValue="2"
+            app:entries="@array/Processing_Mode_entries"
+            app:entryValues="@array/Processing_Mode_values"
+            app:title="Processing Mode"
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
-            android:dependency="key_PostCaptureProcess"
             app:key="key_RemoveBlackBorder"
             android:checked="true"
             app:defaultValue="true"
             app:title="Auto Handle Black Border" />
 
-        <SwitchPreferenceCompat
-            android:dependency="key_PostCaptureProcess"
-            app:key="key_PostCaptureProcessMode"
-            android:checked="true"
-            app:defaultValue="true"
-            app:summaryOff="Manual"
-            app:summaryOn="Auto"
-            app:switchTextOn="Auto"
-            app:title="Post Capturing Process Mode" />
-
+        <ListPreference
+            app:key="key_Image_Enhance_Mode"
+            app:defaultValue="0"
+            app:entries="@array/Enhance_Mode_entries"
+            app:entryValues="@array/Enhance_Mode_values"
+            app:title="Processing Mode"
+            app:useSimpleSummaryProvider="true" />
 
 
     </PreferenceCategory>

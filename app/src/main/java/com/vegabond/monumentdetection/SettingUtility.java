@@ -17,11 +17,12 @@ public class SettingUtility {
         String maxPhoto = preferences.getString("key_MaximumPhoto","10");
         String mode = preferences.getString("key_Mode","1");
         Boolean previewMode = preferences.getBoolean("key_Preview",true);
-        Boolean postCaptureProcess = preferences.getBoolean("key_PostCaptureProcess",true);
-        Boolean removeBlackBorder = preferences.getBoolean("key_RemoveBlackBorder",true);
-        Boolean postCaptureProcessMode = preferences.getBoolean("key_PostCaptureProcessMode",true);
 
-        return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode,previewMode,postCaptureProcess,removeBlackBorder,postCaptureProcessMode);
+        String processingMode = preferences.getString("key_Processing_Mode","2");
+        Boolean removeBlackBorder = preferences.getBoolean("key_RemoveBlackBorder",true);
+        String enhanceMode = preferences.getString("key_Image_Enhance_Mode","0");
+
+        return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode,previewMode,processingMode,removeBlackBorder,enhanceMode);
     }
 
     public static class SettingsControl {
@@ -31,29 +32,29 @@ public class SettingUtility {
         Boolean StoreOriginal;
         String Mode;
         Boolean PreviewMode;
-        Boolean PostCaptureProcess;
+        String ProcessingMode;
         Boolean RemoveBlackBorder;
-        Boolean PostCaptureProcessMode;
+        String EnhanceMode;
 
-        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode,Boolean previewMode,Boolean postCaptureProcess,Boolean removeBlackBorder,Boolean postCaptureProcessMode) {
+        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode,Boolean previewMode,String processingMode,Boolean removeBlackBorder,String enhanceMode) {
             DetectionMode = detectionMode;
             SnapDuration = snapDuration;
             MaxPhoto = maxPhoto;
             StoreOriginal = storeOriginal;
             Mode = mode;
             PreviewMode = previewMode;
-            PostCaptureProcess = postCaptureProcess;
+            ProcessingMode = processingMode;
             RemoveBlackBorder = removeBlackBorder;
-            PostCaptureProcessMode = postCaptureProcessMode;
+            EnhanceMode = enhanceMode;
 
         }
 
-        public Boolean getPostCaptureProcess() {
-            return PostCaptureProcess;
+        public String getProcessingMode() {
+            return ProcessingMode;
         }
 
-        public void setPostCaptureProcess(Boolean postCaptureProcess) {
-            PostCaptureProcess = postCaptureProcess;
+        public void setProcessingMode(String processingMode) {
+            ProcessingMode = processingMode;
         }
 
         public Boolean getRemoveBlackBorder() {
@@ -64,12 +65,12 @@ public class SettingUtility {
             RemoveBlackBorder = removeBlackBorder;
         }
 
-        public Boolean getPostCaptureProcessMode() {
-            return PostCaptureProcessMode;
+        public String getEnhanceMode() {
+            return EnhanceMode;
         }
 
-        public void setPostCaptureProcessMode(Boolean postCaptureProcessMode) {
-            PostCaptureProcessMode = postCaptureProcessMode;
+        public void setEnhanceMode(String enhanceMode) {
+            EnhanceMode = enhanceMode;
         }
 
         public Boolean getDetectionMode() {

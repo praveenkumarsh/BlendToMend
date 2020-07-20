@@ -7,6 +7,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 public class ImageUtils {
 
@@ -20,10 +21,18 @@ public class ImageUtils {
         Mat mat = new Mat(bitmap.getHeight(), bitmap.getWidth(), CvType.CV_8U, new Scalar(4));
         Bitmap bitmap32 = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         Utils.bitmapToMat(bitmap32, mat);
+        Imgproc.cvtColor(mat,mat,Imgproc.COLOR_BGR2RGB);
         return mat;
     }
 
     public static Bitmap matToBitmap(Mat mat) {
+        Imgproc.cvtColor(mat,mat,Imgproc.COLOR_BGR2RGB);
+        Bitmap bitmap = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(mat, bitmap);
+        return bitmap;
+    }
+
+    public static Bitmap matToBitmapGrayscale(Mat mat) {
         Bitmap bitmap = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(mat, bitmap);
         return bitmap;

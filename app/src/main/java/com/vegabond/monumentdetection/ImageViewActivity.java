@@ -73,14 +73,17 @@ public class ImageViewActivity extends AppCompatActivity {
                         findViewById(R.id.retake).setClickable(true);
                         if (!res .equals("")) {
                             File file = new File(res);
-                            boolean check = PostProcessing.removeBlackBorder(ImageViewActivity.this,res);
-                            if (!check){
+                            if (SettingUtility.getControlSettings(getApplicationContext()).getProcessingMode().equals("0")||
+                                    SettingUtility.getControlSettings(getApplicationContext()).getProcessingMode().equals("1")){
                                 final Intent intent = new Intent(Intent.ACTION_VIEW);
                                 intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
                                                 FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", file)
-                                            : Uri.fromFile(file),
-                                    "image/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                                : Uri.fromFile(file),
+                                        "image/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 startActivity(intent);
+                            }else if (SettingUtility.getControlSettings(getApplicationContext()).getProcessingMode().equals("2")){
+                                Log.d("checkx","1. check");
+                                PostProcessing.manualProcessingMode(ImageViewActivity.this,res);
                             }
                         }
 

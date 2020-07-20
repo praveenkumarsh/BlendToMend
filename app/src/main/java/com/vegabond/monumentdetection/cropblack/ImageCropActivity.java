@@ -149,10 +149,10 @@ public class ImageCropActivity extends Activity {
 //        }
 
         List<PointF> result = new ArrayList<>();
-        result.add(new PointF(0, 0));
-        result.add(new PointF(tempBitmap.getWidth(), 0));
-        result.add(new PointF(0, tempBitmap.getHeight()));
-        result.add(new PointF(tempBitmap.getWidth(), tempBitmap.getHeight()));
+        result.add(new PointF(20, 20));
+        result.add(new PointF(tempBitmap.getWidth()-20, 20));
+        result.add(new PointF(20, tempBitmap.getHeight()-20));
+        result.add(new PointF(tempBitmap.getWidth()-20, tempBitmap.getHeight()-20));
 
 
         return result;

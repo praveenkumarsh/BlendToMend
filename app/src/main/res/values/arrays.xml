@@ -63,4 +63,31 @@
         <item>7</item>
     </string-array>
 
+
+    <string-array name="Processing_Mode_entries">
+        <item>Off</item>
+        <item>Automatic</item>
+        <item>Manual</item>
+    </string-array>
+
+    <string-array name="Processing_Mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="Enhance_Mode_entries">
+        <item>Off</item>
+        <item>Smoothen</item>
+        <item>B &amp; W</item>
+        <item>Grayscale</item>
+    </string-array>
+
+    <string-array name="Enhance_Mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
 </resources>
