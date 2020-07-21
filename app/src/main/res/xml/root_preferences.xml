@@ -92,11 +92,13 @@
             app:title="Processing Mode"
             app:useSimpleSummaryProvider="true" />
 
-        <SwitchPreferenceCompat
+        <ListPreference
             app:key="key_RemoveBlackBorder"
-            android:checked="true"
-            app:defaultValue="true"
-            app:title="Auto Handle Black Border (for Automatic Mode)" />
+            app:defaultValue="1"
+            app:entries="@array/Remove_Black_Mode_entries"
+            app:entryValues="@array/Remove_Black_Mode_values"
+            app:title="Auto Handle Black Border (for Automatic Mode)"
+            app:useSimpleSummaryProvider="true" />
 
         <ListPreference
             app:key="key_Image_Enhance_Mode"

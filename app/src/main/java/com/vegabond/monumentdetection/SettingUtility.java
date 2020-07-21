@@ -19,7 +19,7 @@ public class SettingUtility {
         Boolean previewMode = preferences.getBoolean("key_Preview",true);
 
         String processingMode = preferences.getString("key_Processing_Mode","2");
-        Boolean removeBlackBorder = preferences.getBoolean("key_RemoveBlackBorder",true);
+        String removeBlackBorder = preferences.getString("key_RemoveBlackBorder","1");
         String enhanceMode = preferences.getString("key_Image_Enhance_Mode","0");
 
         return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode,previewMode,processingMode,removeBlackBorder,enhanceMode);
@@ -33,10 +33,10 @@ public class SettingUtility {
         String Mode;
         Boolean PreviewMode;
         String ProcessingMode;
-        Boolean RemoveBlackBorder;
+        String RemoveBlackBorder;
         String EnhanceMode;
 
-        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode,Boolean previewMode,String processingMode,Boolean removeBlackBorder,String enhanceMode) {
+        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode,Boolean previewMode,String processingMode,String removeBlackBorder,String enhanceMode) {
             DetectionMode = detectionMode;
             SnapDuration = snapDuration;
             MaxPhoto = maxPhoto;
@@ -57,11 +57,11 @@ public class SettingUtility {
             ProcessingMode = processingMode;
         }
 
-        public Boolean getRemoveBlackBorder() {
+        public String getRemoveBlackBorder() {
             return RemoveBlackBorder;
         }
 
-        public void setRemoveBlackBorder(Boolean removeBlackBorder) {
+        public void setRemoveBlackBorder(String removeBlackBorder) {
             RemoveBlackBorder = removeBlackBorder;
         }
 

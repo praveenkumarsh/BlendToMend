@@ -15,19 +15,26 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.vegabond.monumentdetection.PostProcessing;
 import com.vegabond.monumentdetection.R;
+import com.vegabond.monumentdetection.cropblack.helpers.ImageUtils;
 import com.vegabond.monumentdetection.cropblack.helpers.MyConstants;
 import com.vegabond.monumentdetection.cropblack.libraries.NativeClass;
 import com.vegabond.monumentdetection.cropblack.libraries.PolygonView;
 
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.vegabond.monumentdetection.Camera2BasicFragment.storageDirMain;
 
 public class ImageCropActivity extends Activity {
 
@@ -148,11 +155,38 @@ public class ImageCropActivity extends Activity {
 //            Log.d("Checking","Size:"+points.get(i).x+"--"+points.get(i).y);
 //        }
 
+        //=====================================
+
+        Mat img = ImageUtils.bitmapToMat(tempBitmap);
+
+        int border = 100;
+        Core.copyMakeBorder(img, img, border, border, border, border, Core.BORDER_CONSTANT);
+//        selectedImageBitmap = ImageUtils.matToBitmap(img);
+        Imgcodecs.imwrite(storageDirMain+"/temp/"+"/mats.jpg", img);
+        img = Imgcodecs.imread(storageDirMain+"/temp/"+"/mats.jpg");
+        List<PostProcessing.Pair> pairList = PostProcessing.findLargestRectangle(img);
+
         List<PointF> result = new ArrayList<>();
-        result.add(new PointF(20, 20));
-        result.add(new PointF(tempBitmap.getWidth()-20, 20));
-        result.add(new PointF(20, tempBitmap.getHeight()-20));
-        result.add(new PointF(tempBitmap.getWidth()-20, tempBitmap.getHeight()-20));
+        result.add(new PointF((float)pairList.get(1).x-80, (float)pairList.get(1).y-120)); //Bottom left
+        result.add(new PointF((float)pairList.get(2).x-120, (float)pairList.get(2).y-120)); //Bottom right
+
+        result.add(new PointF((float)pairList.get(3).x-120, (float)pairList.get(3).y-80)); //Top right
+        result.add(new PointF((float)pairList.get(0).x-80, (float)pairList.get(0).y-80)); //Top left
+
+//        List<PointF> result = new ArrayList<>();
+//        result.add(new PointF((float)pairList.get(1).x-80, (float)pairList.get(1).y-80)); //Bottom left expected
+//        result.add(new PointF((float)pairList.get(2).x-80, (float)pairList.get(2).y-80));
+//        result.add(new PointF((float)pairList.get(0).x-80, (float)pairList.get(0).y-80)); //Top left
+//        result.add(new PointF((float)pairList.get(3).x-80, (float)pairList.get(3).y-80)); //Top right
+
+
+        //=====================================
+
+//        List<PointF> result = new ArrayList<>();
+//        result.add(new PointF(20, 20));
+//        result.add(new PointF(tempBitmap.getWidth()-20, 20));
+//        result.add(new PointF(20, tempBitmap.getHeight()-20));
+//        result.add(new PointF(tempBitmap.getWidth()-20, tempBitmap.getHeight()-20));
 
 
         return result;

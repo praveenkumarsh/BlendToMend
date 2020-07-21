@@ -90,4 +90,16 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="Remove_Black_Mode_entries">
+        <item>Off</item>
+        <item>Auto Selection</item>
+        <item>Pre Defined Width</item>
+    </string-array>
+
+    <string-array name="Remove_Black_Mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 </resources>

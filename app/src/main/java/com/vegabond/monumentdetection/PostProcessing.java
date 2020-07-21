@@ -18,6 +18,9 @@ import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -134,6 +137,47 @@ public class PostProcessing {
     }
 
 
+    static Mat autoCropAutoSelection(Mat img){
+        Imgcodecs.imwrite(storageDirMain+"/temp/forC.jpg",img);
+        img = Imgcodecs.imread(storageDirMain+"/temp/forC.jpg");
+        Bitmap tempImg = ImageUtils.matToBitmap(img);
+
+        //===================================================================
+        int border = 100;
+        Core.copyMakeBorder(img, img, border, border, border, border, Core.BORDER_CONSTANT);
+        Imgcodecs.imwrite(storageDirMain+"/temp/"+"/mats.jpg", img);
+        img = Imgcodecs.imread(storageDirMain+"/temp/"+"/mats.jpg");
+        List<PostProcessing.Pair> pairList = PostProcessing.findLargestRectangle(img);
+
+        List<PointF> result = new ArrayList<>();
+        result.add(new PointF((float)pairList.get(1).x-80, (float)pairList.get(1).y-120)); //Bottom left
+        result.add(new PointF((float)pairList.get(2).x-120, (float)pairList.get(2).y-120)); //Bottom right
+
+        result.add(new PointF((float)pairList.get(3).x-120, (float)pairList.get(3).y-80)); //Top right
+        result.add(new PointF((float)pairList.get(0).x-80, (float)pairList.get(0).y-80)); //Top left
+        //====================================================================
+
+        Map<Integer, PointF> points = getOrderedPoints(result);
+        float xRatio = 1 ;
+        float yRatio = 1 ;
+
+        float x1 = (points.get(0).x) * xRatio;
+        float x2 = (points.get(1).x) * xRatio;
+        float x3 = (points.get(2).x) * xRatio;
+        float x4 = (points.get(3).x) * xRatio;
+        float y1 = (points.get(0).y) * yRatio;
+        float y2 = (points.get(1).y) * yRatio;
+        float y3 = (points.get(2).y) * yRatio;
+        float y4 = (points.get(3).y) * yRatio;
+
+        NativeClass nativeClass = new NativeClass();
+
+        Bitmap bitmap =  nativeClass.getScannedBitmap(tempImg, x1, y1, x2, y2, x3, y3, x4, y4);
+        return ImageUtils.bitmapToMat(bitmap);
+
+    }
+
+
     public static Map<Integer, PointF> getOrderedPoints(List<PointF> points) {
 
         PointF centerPoint = new PointF();
@@ -157,5 +201,96 @@ public class PostProcessing {
             orderedPoints.put(index, pointF);
         }
         return orderedPoints;
+    }
+
+    //=====================Get Max Area==========================================
+    public static List<Pair> findLargestRectangle(Mat imgSource) {
+//	    Mat imgSource = original_image;
+//	    Mat untouched = original_image.clone();
+//
+//	    //convert the image to black and white
+//	    Imgproc.cvtColor(imgSource, imgSource, Imgproc.COLOR_BGR2GRAY);
+
+        //convert the image to black and white does (8 bit)
+        Imgproc.cvtColor(imgSource, imgSource, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.threshold(imgSource, imgSource, 0, 255.0, Imgproc.THRESH_BINARY);
+        Imgproc.Canny(imgSource, imgSource, 10, 10 * 3, 3, false);
+//	    Imgproc.Canny(imgSource, imgSource, 50, 50);
+
+        //apply gaussian blur to smoothen lines of dots
+        Imgproc.GaussianBlur(imgSource, imgSource, new Size(5, 5), 5);
+
+        //find the contours
+        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+        Imgproc.findContours(imgSource, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        double maxArea = -1;
+        int maxAreaIdx = -1;
+        MatOfPoint temp_contour = contours.get(0); //the largest is at the index 0 for starting point
+        MatOfPoint2f approxCurve = new MatOfPoint2f();
+        MatOfPoint2f maxCurve = new MatOfPoint2f();
+        List<MatOfPoint> largest_contours = new ArrayList<MatOfPoint>();
+        for (int idx = 0; idx < contours.size(); idx++) {
+            temp_contour = contours.get(idx);
+            double contourarea = Imgproc.contourArea(temp_contour);
+            //compare this contour to the previous largest contour found
+            if (contourarea > maxArea) {
+                //check if this contour is a square
+                MatOfPoint2f new_mat = new MatOfPoint2f( temp_contour.toArray() );
+                int contourSize = (int)temp_contour.total();
+                Imgproc.approxPolyDP(new_mat, approxCurve, contourSize*0.05, true);
+                if (approxCurve.total() == 4) {
+                    maxCurve = approxCurve;
+                    maxArea = contourarea;
+                    maxAreaIdx = idx;
+                    largest_contours.add(temp_contour);
+                }
+            }
+        }
+
+        List<Pair> list = new ArrayList<>();
+
+//	    //create the new image here using the largest detected square
+//	    Mat new_image = new Mat(imgSource.size(), CvType.CV_8U); //we will create a new black blank image with the largest contour
+//	    Imgproc.cvtColor(new_image, new_image, Imgproc.COLOR_BayerBG2RGB);
+//	    Imgproc.drawContours(new_image, contours, maxAreaIdx, new Scalar(255, 255, 255), 1); //will draw the largest square/rectangle
+
+        double temp_double[] = maxCurve.get(0, 0);
+        Point p1 = new Point(temp_double[0], temp_double[1]);
+//	    Imgproc.circle(new_image, new Point(p1.x, p1.y), 20, new Scalar(255, 0, 0), 5); //p1 is colored red
+        String temp_string = "Point 1: (" + p1.x + ", " + p1.y + ")";
+        list.add(new Pair(p1.x, p1.y));
+
+        temp_double = maxCurve.get(1, 0);
+        Point p2 = new Point(temp_double[0], temp_double[1]);
+//	    Imgproc.circle(new_image, new Point(p2.x, p2.y), 20, new Scalar(0, 255, 0), 5); //p2 is colored green
+        temp_string += "\nPoint 2: (" + p2.x + ", " + p2.y + ")";
+        list.add(new Pair(p2.x, p2.y));
+
+        temp_double = maxCurve.get(2, 0);
+        Point p3 = new Point(temp_double[0], temp_double[1]);
+//	    Imgproc.circle(new_image, new Point(p3.x, p3.y), 20, new Scalar(0, 0, 255), 5); //p3 is colored blue
+        temp_string += "\nPoint 3: (" + p3.x + ", " + p3.y + ")";
+        list.add(new Pair(p3.x, p3.y));
+
+        temp_double = maxCurve.get(3, 0);
+        Point p4 = new Point(temp_double[0], temp_double[1]);
+//	    Imgproc.circle(new_image, new Point(p4.x, p4.y), 20, new Scalar(0, 255, 255), 5); //p1 is colored violet
+        temp_string += "\nPoint 4: (" + p4.x + ", " + p4.y + ")";
+        list.add(new Pair(p4.x, p4.y));
+
+        return list;
+    }
+
+    public static class Pair{
+        public double x;
+        public double y;
+        public Pair() {
+            // TODO Auto-generated constructor stub
+        }
+        public Pair(double x2,double y2){
+            this.x = x2;
+            this.y = y2;
+        }
     }
 }

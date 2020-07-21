@@ -69,7 +69,7 @@ public class NativeClass {
         return result;
     }
 
-    //public native float[] getPoints(Bitmap bitmap);
+//    public native float[] getPoints(Bitmap bitmap);
     public List<MatOfPoint2f> getPoints(Mat src) {
 
         // Blur the image to filter out the noise.

@@ -88,8 +88,10 @@ public class ImageProcessing {
         //==========================================================================================
         //==========================Auto Mode Processing Options set================================
         if (SettingUtility.getControlSettings(mContext).getProcessingMode().equals("1")&&!previewMode){
-            if (SettingUtility.getControlSettings(mContext).getRemoveBlackBorder()){
+            if (SettingUtility.getControlSettings(mContext).getRemoveBlackBorder().equals("1")){
                 //To be handle while image is processing
+                finalMatImage = PostProcessing.autoCropAutoSelection(finalMatImage);
+            }else if (SettingUtility.getControlSettings(mContext).getRemoveBlackBorder().equals("2")){
                 finalMatImage = PostProcessing.autoCrop(finalMatImage);
             }
             String enhancemode = SettingUtility.getControlSettings(mContext).getEnhanceMode();
