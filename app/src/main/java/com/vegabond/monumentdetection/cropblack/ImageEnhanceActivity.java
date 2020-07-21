@@ -1,5 +1,6 @@
 package com.vegabond.monumentdetection.cropblack;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.vegabond.monumentdetection.MainActivity;
 import com.vegabond.monumentdetection.R;
 import com.vegabond.monumentdetection.cropblack.helpers.ImageUtils;
 import com.vegabond.monumentdetection.cropblack.helpers.MyConstants;
@@ -40,6 +42,7 @@ public class ImageEnhanceActivity extends AppCompatActivity {
     Button btnImageToGray;
     Button btnImageOriginal;
     Button btnSave;
+    Button btnRetake;
 
     ProgressBar progressBarImageEnhance;
 
@@ -75,6 +78,13 @@ public class ImageEnhanceActivity extends AppCompatActivity {
         btnImageOriginal.setOnClickListener(btnOriginal);
 
         progressBarImageEnhance.setVisibility(View.INVISIBLE);
+
+        findViewById(R.id.btnRetake).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ImageEnhanceActivity.this, MainActivity.class));
+            }
+        });
 
 
 

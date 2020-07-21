@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ImageViewActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
     <TextView
         android:layout_width="wrap_content"
@@ -90,9 +95,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save Image"
-            android:layout_marginEnd="50dp"
             android:layout_marginTop="10dp"
             android:layout_below="@id/btnImageSmoothen"
+            android:layout_toStartOf="@id/btnRetake"
+            android:layout_toEndOf="@id/btnImageOriginal"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:backgroundTint="#E0ABEEF4"
+            />
+
+        <Button
+            android:id="@+id/btnRetake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retake"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/btnImageToGray"
             android:layout_alignParentEnd="true"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
@@ -112,6 +131,5 @@
         android:visibility="visible"
         />
 
-
-
 </FrameLayout>
+    </ScrollView>

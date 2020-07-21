@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -16,6 +17,8 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -359,7 +362,7 @@ public class Camera2BasicFragment extends Fragment
     private ImageButton ibsettings,capture,recent;
     static SettingUtility.SettingsControl setting;
     private TextView notice,info;
-    private ImageView sample_cameraview;
+    private ImageView sample_cameraview,current_progress;
     private FrameLayout flbackground;
     private ProgressBar progress;
     static int count = 0;
@@ -381,6 +384,7 @@ public class Camera2BasicFragment extends Fragment
         recent = view.findViewById(R.id.IBrecent);
         sample_cameraview = view.findViewById(R.id.sample_capture_view);
         flbackground = view.findViewById(R.id.FLbackground);
+        current_progress = view.findViewById(R.id.current_progress_display);
 //
 //        recent.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -852,6 +856,7 @@ public class Camera2BasicFragment extends Fragment
     int mWaitTime;
     int mTempWaitTime;
     Thread thread;
+    ArrayList<Drawable> layers = new ArrayList<>();
 
     @Override
     public void onClick(View view) {
@@ -867,7 +872,9 @@ public class Camera2BasicFragment extends Fragment
                     capture.setImageResource(R.drawable.ic_camera_white);
                     capture.setClickable(false);
                     recent.setClickable(false);
-                    flbackground.setBackgroundColor(getResources().getColor(R.color.red));
+                    if (SettingUtility.getControlSettings(getContext()).getDisplayCapturingStatus()) {
+                        flbackground.setBackgroundColor(getResources().getColor(R.color.red));
+                    }
 
                     final int[] maxSnap = {Integer.parseInt(setting.getMaxPhoto())};
                     final int maxGap = Integer.parseInt(setting.getSnapDuration());
@@ -877,11 +884,31 @@ public class Camera2BasicFragment extends Fragment
                     final Handler mHandler = new Handler();
                     final Runnable mUpdateResults = new Runnable() {
                         public void run() {
+                            if(count>=1&&SettingUtility.getControlSettings(getContext()).getOnBottomCurrentHint()) {
+                                Drawable d;
+                                if (count ==1){
+                                    d = Drawable.createFromPath(storageDir + "/" + (count-1) + ".jpg");
+                                }else{
+                                    d = Drawable.createFromPath(storageDir + "/processed" + (count-1) + ".jpg");
+                                }
+
+                                layers.add(d);
+                                LayerDrawable layerDrawable = new LayerDrawable(layers.toArray(new Drawable[0]));
+                                current_progress.setImageDrawable(layerDrawable);
+                            }
+
                             if (count==maxSnap[0]){
                                 sample_cameraview.setImageBitmap(null);
-                                flbackground.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+                                if (SettingUtility.getControlSettings(getContext()).getDisplayCapturingStatus()) {
+                                    flbackground.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+                                }
+                                if (SettingUtility.getControlSettings(getContext()).getOnBottomCurrentHint()){
+                                    layers.clear();
+                                    current_progress.setImageBitmap(null);
+                                }
+
                             }
-                            if (count == 1){
+                            if (count == 1&&SettingUtility.getControlSettings(getContext()).getOnDisplayHint()){
                                 File image = new File(storageDir + "/0.jpg");
                                 Glide.with(getActivity().getApplicationContext())
                                         .load(image) // Uri of the picture

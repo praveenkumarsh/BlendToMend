@@ -22,7 +22,11 @@ public class SettingUtility {
         String removeBlackBorder = preferences.getString("key_RemoveBlackBorders","1");
         String enhanceMode = preferences.getString("key_Image_Enhance_Mode","0");
 
-        return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode,previewMode,processingMode,removeBlackBorder,enhanceMode);
+        Boolean onDisplayHint = preferences.getBoolean("key_onscreen_hint",true);
+        Boolean onBottomCurrentHint = preferences.getBoolean("key_current_status_hint",true);
+        Boolean displayCapturingStatus = preferences.getBoolean("key_capturing_hint",true);
+
+        return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode,previewMode,processingMode,removeBlackBorder,enhanceMode,onDisplayHint,onBottomCurrentHint,displayCapturingStatus);
     }
 
     public static class SettingsControl {
@@ -35,8 +39,9 @@ public class SettingUtility {
         String ProcessingMode;
         String RemoveBlackBorder;
         String EnhanceMode;
+        Boolean OnDisplayHint,OnBottomCurrentHint,DisplayCapturingStatus;
 
-        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode,Boolean previewMode,String processingMode,String removeBlackBorder,String enhanceMode) {
+        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode,Boolean previewMode,String processingMode,String removeBlackBorder,String enhanceMode,Boolean onDisplayHint,Boolean onBottomCurrentHint,Boolean displayCapturingStatus) {
             DetectionMode = detectionMode;
             SnapDuration = snapDuration;
             MaxPhoto = maxPhoto;
@@ -46,7 +51,35 @@ public class SettingUtility {
             ProcessingMode = processingMode;
             RemoveBlackBorder = removeBlackBorder;
             EnhanceMode = enhanceMode;
+            OnDisplayHint = onDisplayHint;
+            OnBottomCurrentHint = onBottomCurrentHint;
+            DisplayCapturingStatus = displayCapturingStatus;
 
+        }
+
+
+        public Boolean getOnDisplayHint() {
+            return OnDisplayHint;
+        }
+
+        public void setOnDisplayHint(Boolean onDisplayHint) {
+            OnDisplayHint = onDisplayHint;
+        }
+
+        public Boolean getOnBottomCurrentHint() {
+            return OnBottomCurrentHint;
+        }
+
+        public void setOnBottomCurrentHint(Boolean onBottomCurrentHint) {
+            OnBottomCurrentHint = onBottomCurrentHint;
+        }
+
+        public Boolean getDisplayCapturingStatus() {
+            return DisplayCapturingStatus;
+        }
+
+        public void setDisplayCapturingStatus(Boolean displayCapturingStatus) {
+            DisplayCapturingStatus = displayCapturingStatus;
         }
 
         public String getProcessingMode() {

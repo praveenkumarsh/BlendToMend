@@ -74,6 +74,32 @@
 
     </PreferenceCategory>
 
+
+    <PreferenceCategory
+        android:key="preference_display"
+        app:title="Display">
+
+        <SwitchPreferenceCompat
+            app:key="key_onscreen_hint"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Display On Screen Hint as Overlay" />
+
+        <SwitchPreferenceCompat
+            app:key="key_current_status_hint"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Display Current Status on bottom right corner" />
+
+        <SwitchPreferenceCompat
+            app:key="key_capturing_hint"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Display Capturing status" />
+
+
+    </PreferenceCategory>
+
     <PreferenceCategory
         android:key="preference_exp"
         app:title="Experimental">
@@ -110,6 +136,9 @@
 
 
     </PreferenceCategory>
+
+
+
 
 
     <PreferenceCategory app:title="Help">
