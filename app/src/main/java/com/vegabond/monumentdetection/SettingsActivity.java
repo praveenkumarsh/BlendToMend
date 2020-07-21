@@ -63,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             //======================================================================================
             final ListPreference processing_mode = (ListPreference)findPreference("key_Processing_Mode");
-            final ListPreference removeBlackBorder = findPreference("key_RemoveBlackBorder");
+            final ListPreference removeBlackBorder = findPreference("key_RemoveBlackBorders");
             final ListPreference image_enhance_mode = (ListPreference)findPreference("key_Image_Enhance_Mode");
             //========
             PreferenceCategory rootPreferences = findPreference("preference_exp");

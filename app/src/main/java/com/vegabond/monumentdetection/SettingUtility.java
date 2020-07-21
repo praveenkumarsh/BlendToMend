@@ -19,7 +19,7 @@ public class SettingUtility {
         Boolean previewMode = preferences.getBoolean("key_Preview",true);
 
         String processingMode = preferences.getString("key_Processing_Mode","2");
-        String removeBlackBorder = preferences.getString("key_RemoveBlackBorder","1");
+        String removeBlackBorder = preferences.getString("key_RemoveBlackBorders","1");
         String enhanceMode = preferences.getString("key_Image_Enhance_Mode","0");
 
         return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode,previewMode,processingMode,removeBlackBorder,enhanceMode);

@@ -93,7 +93,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:key="key_RemoveBlackBorder"
+            app:key="key_RemoveBlackBorders"
             app:defaultValue="1"
             app:entries="@array/Remove_Black_Mode_entries"
             app:entryValues="@array/Remove_Black_Mode_values"
