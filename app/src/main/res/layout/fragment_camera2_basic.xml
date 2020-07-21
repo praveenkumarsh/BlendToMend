@@ -31,14 +31,49 @@
         android:padding="5dp"
         >
 
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+<!--            -->
+
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
         <com.vegabond.monumentdetection.AutoFitTextureView
             android:id="@+id/texture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            >
 
         </com.vegabond.monumentdetection.AutoFitTextureView>
+
+        <ImageView
+            android:id="@+id/sample_capture_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:alpha="0.5"
+            android:scaleType="fitStart"
+            />
+
+        </FrameLayout>
+
+<!--        <ImageView-->
+<!--            android:id="@+id/current_view"-->
+<!--            android:layout_width="300dp"-->
+<!--            android:layout_height="300dp"-->
+<!--            />-->
+
+
 
 
         <TextView
@@ -122,7 +157,7 @@
             android:layout_marginBottom="170dp"
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:progressTint="#36970f"
             android:thumb="@drawable/seek_bar_zoom_thumb"
             android:progressDrawable="@drawable/seek_bar_oom_drawable"

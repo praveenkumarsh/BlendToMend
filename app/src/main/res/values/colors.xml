@@ -7,6 +7,7 @@
 
 
     <color name="bottom_background_color">#ffc4c2bc</color>
+    <color name="red">#5E5454</color>
 
     <color name="polygonViewCircleStrokeColor">#ff59a9ff</color>
     <color name="polygonViewCircleBackground">#90e5f8ff</color>

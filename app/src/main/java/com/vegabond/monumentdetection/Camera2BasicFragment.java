@@ -26,6 +26,7 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.ExifInterface;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.MediaActionSound;
@@ -46,6 +47,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -53,12 +55,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.vegabond.monumentdetection.recentcaptureutility.CustomGalleryActivity;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -353,6 +359,8 @@ public class Camera2BasicFragment extends Fragment
     private ImageButton ibsettings,capture,recent;
     static SettingUtility.SettingsControl setting;
     private TextView notice,info;
+    private ImageView sample_cameraview;
+    private FrameLayout flbackground;
     private ProgressBar progress;
     static int count = 0;
     static File storageDir;
@@ -371,6 +379,8 @@ public class Camera2BasicFragment extends Fragment
         progress = view.findViewById(R.id.PBprogress);
         capture = view.findViewById(R.id.IBcapture);
         recent = view.findViewById(R.id.IBrecent);
+        sample_cameraview = view.findViewById(R.id.sample_capture_view);
+        flbackground = view.findViewById(R.id.FLbackground);
 //
 //        recent.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -857,6 +867,7 @@ public class Camera2BasicFragment extends Fragment
                     capture.setImageResource(R.drawable.ic_camera_white);
                     capture.setClickable(false);
                     recent.setClickable(false);
+                    flbackground.setBackgroundColor(getResources().getColor(R.color.red));
 
                     final int[] maxSnap = {Integer.parseInt(setting.getMaxPhoto())};
                     final int maxGap = Integer.parseInt(setting.getSnapDuration());
@@ -866,7 +877,18 @@ public class Camera2BasicFragment extends Fragment
                     final Handler mHandler = new Handler();
                     final Runnable mUpdateResults = new Runnable() {
                         public void run() {
-
+                            if (count==maxSnap[0]){
+                                sample_cameraview.setImageBitmap(null);
+                                flbackground.setBackgroundColor(getResources().getColor(R.color.colorBlack));
+                            }
+                            if (count == 1){
+                                File image = new File(storageDir + "/0.jpg");
+                                Glide.with(getActivity().getApplicationContext())
+                                        .load(image) // Uri of the picture
+                                        .apply(RequestOptions.skipMemoryCacheOf(true))
+                                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
+                                        .into(sample_cameraview);
+                            }
                             int remain = maxSnap[0]-count;
                             info.setText("Remaining : "+remain+"/"+maxSnap[0]+" Capture");
                             Toast.makeText(getContext(), "Remaining : "+remain+"/"+maxSnap[0], Toast.LENGTH_SHORT).show();
@@ -875,7 +897,7 @@ public class Camera2BasicFragment extends Fragment
                     final Runnable afterProcessing = new Runnable() {
                         public void run() {
 
-                            Toast.makeText(getContext(), "Allignment Completed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Alignment Completed", Toast.LENGTH_LONG).show();
                         }
                     };
                     thread = new Thread() {
@@ -895,6 +917,7 @@ public class Camera2BasicFragment extends Fragment
                                     Thread.currentThread().interrupt();
                                     notice.setVisibility(View.INVISIBLE);
                                     info.setVisibility(View.INVISIBLE);
+
 
 
                                     mHandler.post(mUpdateResults);
@@ -941,6 +964,13 @@ public class Camera2BasicFragment extends Fragment
                 break;
             }
         }
+    }
+
+    private static int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+        return 0;
     }
 
     public void generatePreview(){
@@ -1016,6 +1046,7 @@ public class Camera2BasicFragment extends Fragment
                         Mat processed = ImageProcessing.imageRegistration(reference, toCompare);
                         Imgcodecs.imwrite(storageDir + "/processed" + count + ".jpg", processed);
 
+
                         if (count == 1){
                             Imgcodecs.imwrite(storageDir + "/processed" + "0" + ".jpg",reference);
                         }
@@ -1037,6 +1068,8 @@ public class Camera2BasicFragment extends Fragment
         }
 
     }
+
+
 
     static class CompareSizesByArea implements Comparator<Size> {
 
