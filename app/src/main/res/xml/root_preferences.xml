@@ -1,5 +1,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="root_key"
+    >
 
 
     <PreferenceCategory app:title="About">
@@ -72,7 +74,9 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Experimental">
+    <PreferenceCategory
+        android:key="preference_exp"
+        app:title="Experimental">
 
         <SwitchPreferenceCompat
             app:key="key_Preview"
@@ -92,14 +96,14 @@
             app:key="key_RemoveBlackBorder"
             android:checked="true"
             app:defaultValue="true"
-            app:title="Auto Handle Black Border" />
+            app:title="Auto Handle Black Border (for Automatic Mode)" />
 
         <ListPreference
             app:key="key_Image_Enhance_Mode"
             app:defaultValue="0"
             app:entries="@array/Enhance_Mode_entries"
             app:entryValues="@array/Enhance_Mode_values"
-            app:title="Processing Mode"
+            app:title="Enhance Mode (for Automatic Mode)"
             app:useSimpleSummaryProvider="true" />
 
 

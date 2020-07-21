@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
@@ -32,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Camera2BasicFragment.setting = SettingUtility.getControlSettings(getApplicationContext());
+        finish();
     }
 
     @Override
@@ -63,28 +65,25 @@ public class SettingsActivity extends AppCompatActivity {
             final ListPreference processing_mode = (ListPreference)findPreference("key_Processing_Mode");
             final SwitchPreferenceCompat removeBlackBorder = findPreference("key_RemoveBlackBorder");
             final ListPreference image_enhance_mode = (ListPreference)findPreference("key_Image_Enhance_Mode");
-            removeBlackBorder.setEnabled(false);
-            image_enhance_mode.setEnabled(false);
-            if (processing_mode.getValue()=="1"){
-                removeBlackBorder.setEnabled(false);
-                image_enhance_mode.setEnabled(false);
-            }else{
+            //========
+            PreferenceCategory rootPreferences = findPreference("preference_exp");
+
+
+            //========
+            if (processing_mode.getValue().equals("1")){
                 removeBlackBorder.setEnabled(true);
                 image_enhance_mode.setEnabled(true);
+            }else{
+                removeBlackBorder.setEnabled(false);
+                image_enhance_mode.setEnabled(false);
+                rootPreferences.removePreference(removeBlackBorder);
+                rootPreferences.removePreference(image_enhance_mode);
             }
 
             processing_mode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    final String val = newValue.toString();
-                    Log.d("Value",val);
-                    int index = processing_mode.findIndexOfValue(val);
-                    if(index==1) {
-                        removeBlackBorder.setEnabled(true);
-                        image_enhance_mode.setEnabled(true);
-                    } else {
-                        removeBlackBorder.setEnabled(false);
-                        image_enhance_mode.setEnabled(false);
-                    }
+                    startActivity(new Intent(getActivity(),SettingsActivity.class));
+                    getActivity().finish();
                     return true;
                 }
             });
@@ -171,6 +170,8 @@ public class SettingsActivity extends AppCompatActivity {
 
 
 
+
+
         static void helpPage(){
             String url = "https://praveensharma.cf/MonumentDetection_Help";
             Intent i = new Intent(Intent.ACTION_VIEW);
@@ -234,4 +235,5 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     }
+
 }

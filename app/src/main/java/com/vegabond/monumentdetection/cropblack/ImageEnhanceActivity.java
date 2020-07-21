@@ -97,7 +97,30 @@ public class ImageEnhanceActivity extends AppCompatActivity {
         public void onClick(View v) {
             //TODO: create BW
             progressBarImageEnhance.setVisibility(View.VISIBLE);
+            //=========================================================
             Mat imageMat = bitmapToMat(selectedImageBitmap);
+
+            Mat destination = new Mat(imageMat.rows(),imageMat.cols(),imageMat.type());
+            Imgproc.GaussianBlur(imageMat, destination, new Size(0,0), 3);
+            Core.addWeighted(imageMat, 2.5, destination, -1.5, 0, destination);
+            destination.copyTo(imageMat);
+
+            destination = new Mat(imageMat.rows(),imageMat.cols(),imageMat.type());
+            Imgproc.GaussianBlur(imageMat, destination, new Size(0,0), 3);
+            Core.addWeighted(imageMat, 2.5, destination, -1.5, 0, destination);
+            destination.copyTo(imageMat);
+
+            destination = new Mat(imageMat.rows(),imageMat.cols(),imageMat.type());
+            Imgproc.GaussianBlur(imageMat, destination, new Size(0,0), 3);
+            Core.addWeighted(imageMat, 2.5, destination, -1.5, 0, destination);
+            destination.copyTo(imageMat);
+
+            destination = new Mat(imageMat.rows(),imageMat.cols(),imageMat.type());
+            Imgproc.GaussianBlur(imageMat, destination, new Size(0,0), 3);
+            Core.addWeighted(imageMat, 2.5, destination, -1.5, 0, destination);
+            destination.copyTo(imageMat);
+
+//            Mat imageMat = bitmapToMat(selectedImageBitmap);
             Mat gray = new Mat(selectedImageBitmap.getHeight(),selectedImageBitmap.getWidth(), CvType.CV_16UC1);
             Imgproc.cvtColor(imageMat, gray, Imgproc.COLOR_RGB2GRAY);
 

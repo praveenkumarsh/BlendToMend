@@ -72,10 +72,33 @@ public class PostProcessing {
     static Mat bandw(Context mContext,Mat imageMat){
         Imgcodecs.imwrite(storageDirMain+"/temp/forG.jpg",imageMat);
         imageMat = Imgcodecs.imread(storageDirMain+"/temp/forG.jpg");
-        Mat mat1 = new Mat(imageMat.cols(),imageMat.rows(),CvType.CV_16SC1);
-        Imgproc.cvtColor(imageMat, mat1, Imgproc.COLOR_RGB2GRAY);
-        Mat mat2 = new Mat(imageMat.cols(),imageMat.rows(),CvType.CV_16SC1);
-        Imgproc.threshold(mat1,mat2, 128, 255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
+
+        Mat destination = new Mat(imageMat.rows(),imageMat.cols(),imageMat.type());
+        Imgproc.GaussianBlur(imageMat, destination, new Size(0,0), 3);
+        Core.addWeighted(imageMat, 2.5, destination, -1.5, 0, destination);
+        destination.copyTo(imageMat);
+
+        destination = new Mat(imageMat.rows(),imageMat.cols(),imageMat.type());
+        Imgproc.GaussianBlur(imageMat, destination, new Size(0,0), 3);
+        Core.addWeighted(imageMat, 2.5, destination, -1.5, 0, destination);
+        destination.copyTo(imageMat);
+
+        destination = new Mat(imageMat.rows(),imageMat.cols(),imageMat.type());
+        Imgproc.GaussianBlur(imageMat, destination, new Size(0,0), 3);
+        Core.addWeighted(imageMat, 2.5, destination, -1.5, 0, destination);
+        destination.copyTo(imageMat);
+
+        destination = new Mat(imageMat.rows(),imageMat.cols(),imageMat.type());
+        Imgproc.GaussianBlur(imageMat, destination, new Size(0,0), 3);
+        Core.addWeighted(imageMat, 2.5, destination, -1.5, 0, destination);
+        destination.copyTo(imageMat);
+
+        Mat gray = new Mat(imageMat.rows(),imageMat.cols(), CvType.CV_16UC1);
+        Imgproc.cvtColor(imageMat, gray, Imgproc.COLOR_RGB2GRAY);
+
+        Mat mat2 = new Mat(imageMat.rows(),imageMat.cols(), CvType.CV_16UC1);
+        Imgproc.threshold(gray,mat2, 128, 255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
+
         return mat2;
 
     }
