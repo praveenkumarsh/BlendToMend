@@ -48,7 +48,7 @@
         <item>Advanced Mode1 (Using Short Array)</item>
         <item>Advanced Mode2 (Using Short Array with Half Image Compare)</item>
         <item>Advanced Mode3 (Using Short Array with Half Image and Sliding Window Compare)</item>
-
+        <item>Advanced Mode4 (Background Masking with Using Short Array)</item>
     </string-array>
 
     <string-array name="Mode_values">
@@ -59,6 +59,7 @@
         <item>5</item>
         <item>6</item>
         <item>7</item>
+        <item>8</item>
     </string-array>
 
 

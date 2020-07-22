@@ -26,6 +26,8 @@ import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.ORB;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.video.BackgroundSubtractorMOG2;
+import org.opencv.video.Video;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,6 +80,10 @@ public class ImageProcessing {
             case "7":
 //                Toast.makeText(mContext,"Advanced Mode 3 Selected",Toast.LENGTH_SHORT).show();
                 finalMatImage = advancedMode3(previewMode);
+                break;
+            case "8":
+//                Toast.makeText(mContext,"Advanced Mode 3 Selected",Toast.LENGTH_SHORT).show();
+                finalMatImage = backgroundMasking(previewMode);
                 break;
             default:
 //                Toast.makeText(mContext,"Basic Mode 1 Selected",Toast.LENGTH_SHORT).show();
@@ -537,6 +543,81 @@ public class ImageProcessing {
             for (int j = 0; j < listImages.size(); j++) {
 
                     pi.add(listImages.get(j)[i]);
+
+            }
+            listImages.get(0)[i] = pi.size()<1?listImages.get(0)[i]:median(pi);
+
+        }
+
+        String file_name;
+        if (previewMode) {
+            file_name = storageDir+"/preview"+"0"+".png";
+        } else{
+            file_name = storageDir + "/processed" + "0" + ".jpg";
+        }
+        System.out.println(file_name);
+
+        Mat finalimg = Imgcodecs.imread(file_name);
+
+        finalimg.convertTo(finalimg, CvType.CV_16SC3);
+        finalimg.put(0, 0, listImages.get(0));
+
+        listImages.clear();
+
+        return finalimg;
+    }
+
+    public static Mat backgroundMasking(Boolean previewMode){
+        if (count>10) {
+            count = 10;
+        }
+        Log.d("ImageProcessing","In After Allignment");
+        List<short[]> listImages = new ArrayList<>();
+        int startPic = 0;
+        int endPic = count-1;
+        Log.d("ImageProcessing","Start :"+startPic+" "+"End :"+endPic);
+
+        BackgroundSubtractorMOG2 mog2 = Video.createBackgroundSubtractorMOG2(500, 0, true);
+
+        for (int i=startPic;i<=endPic;i++){
+            String file_name;
+            if (previewMode) {
+                file_name = storageDir+"/preview"+i+".png";
+            } else{
+                file_name = storageDir + "/processed" + i + ".jpg";
+            }
+            Log.d("ImageProcessing","FilePath :"+file_name);
+            Mat img = Imgcodecs.imread(file_name);
+            //==========================================================
+            Mat fgmask = new Mat();
+            mog2.apply(img, fgmask);
+            Mat thresh = new Mat();
+            Imgproc.threshold(fgmask, thresh, 0, 255, Imgproc.THRESH_OTSU);
+            Core.bitwise_not(thresh, thresh);
+            Mat res_temp = new Mat();
+            Core.bitwise_and(img, img, res_temp, thresh);
+
+
+            res_temp.convertTo(res_temp, CvType.CV_16SC3);
+
+            int size = (int) (res_temp.total() * res_temp.channels());
+            short[] temp = new short[size];
+            res_temp.get(0, 0, temp);
+
+            listImages.add(temp);
+            //==========================================================
+
+        }
+        Log.d("ImageProcessing","Images List Size :"+listImages.size());
+
+        for (int i = 0; i < listImages.get(0).length; i++) {
+            List<Short> pi = new ArrayList<>();
+            for (int j = 0; j < listImages.size(); j++) {
+
+                if (listImages.get(j)[i] != 0) {
+                    pi.add(listImages.get(j)[i]);
+
+                }
 
             }
             listImages.get(0)[i] = pi.size()<1?listImages.get(0)[i]:median(pi);
