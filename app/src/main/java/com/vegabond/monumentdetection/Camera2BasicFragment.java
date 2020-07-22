@@ -887,9 +887,10 @@ public class Camera2BasicFragment extends Fragment
                             if(count>=1&&SettingUtility.getControlSettings(getContext()).getOnBottomCurrentHint()) {
                                 Drawable d;
                                 if (count ==1){
-                                    d = Drawable.createFromPath(storageDir + "/" + (count-1) + ".jpg");
+
+                                    d = Drawable.createFromPath(generateSinglePreview(count-1,true));
                                 }else{
-                                    d = Drawable.createFromPath(storageDir + "/processed" + (count-1) + ".jpg");
+                                    d = Drawable.createFromPath(generateSinglePreview(count-1,false));
                                 }
 
                                 layers.add(d);
@@ -998,6 +999,30 @@ public class Camera2BasicFragment extends Fragment
         else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
         else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
         return 0;
+    }
+
+
+    public String generateSinglePreview(int i,Boolean isFirst){
+        String file_name;
+        if (isFirst){
+            file_name = storageDir + "/" + i + ".jpg";
+        }else{
+            file_name = storageDir + "/processed" + i + ".jpg";
+        }
+            Bitmap b= BitmapFactory.decodeFile(file_name);
+            Bitmap out = Bitmap.createScaledBitmap(b, 80, 120, false);
+            File file = new File(storageDir+"/thumbnail"+i+".png");
+            FileOutputStream fOut;
+            try {
+                fOut = new FileOutputStream(file);
+                out.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                fOut.flush();
+                fOut.close();
+                b.recycle();
+                out.recycle();
+            } catch (Exception e) {}
+            return file.getAbsolutePath();
+
     }
 
     public void generatePreview(){
