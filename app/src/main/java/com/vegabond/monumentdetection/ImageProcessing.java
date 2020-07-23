@@ -3,12 +3,19 @@ package com.vegabond.monumentdetection;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
+
+import com.vegabond.monumentdetection.cropblack.helpers.ImageUtils;
 
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
@@ -29,9 +36,11 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.video.BackgroundSubtractorMOG2;
 import org.opencv.video.Video;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -39,6 +48,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.vegabond.monumentdetection.Camera2BasicFragment.count;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsAddress;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsCity;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsCountry;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsLatitude;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsLongitude;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsPostalCode;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsState;
 import static com.vegabond.monumentdetection.Camera2BasicFragment.setting;
 import static com.vegabond.monumentdetection.Camera2BasicFragment.storageDir;
 import static com.vegabond.monumentdetection.Camera2BasicFragment.storageDirMain;
@@ -119,6 +135,63 @@ public class ImageProcessing {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         final String currentTimeStamp = dateFormat.format(new Date());
+        if (SettingUtility.getControlSettings(mContext).getProcessingMode().equals("1")&&!previewMode){
+            if (SettingUtility.getControlSettings(mContext).getPicStamp()) {
+                Bitmap bitmap;
+                if (Integer.parseInt(SettingUtility.getControlSettings(mContext).getEnhanceMode())>=2){
+                    bitmap = ImageUtils.matToBitmapGrayscale(finalMatImage);
+                }else {
+                    bitmap = ImageUtils.matToBitmap(finalMatImage);
+                }
+
+                Bitmap dest = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+
+                Canvas cs = new Canvas(dest);
+
+                Paint tPaint = new Paint();
+                tPaint.setTextSize(bitmap.getHeight()/45);
+                tPaint.setColor(mContext.getResources().getColor(R.color.colorRed));
+
+                Paint.Style style = Paint.Style.FILL;
+                style = Paint.Style.FILL;
+
+                tPaint.setStyle(style);
+                tPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD));
+                cs.drawBitmap(bitmap, 0f, 0f, null);
+                float heights = tPaint.measureText("yY");
+                //==============================================================
+                String GPSinfo1 = "";
+                String GPSinfo2 = "";
+                if (!SettingUtility.getControlSettings(mContext).getGpsStamp().equals("-1")) {
+                    if (SettingUtility.getControlSettings(mContext).getGpsStamp().equals("LL")) {
+                        GPSinfo1 = "Latitude: " + gpsLatitude;
+                        GPSinfo2 = "Longitude: " + gpsLongitude;
+                    } else if (SettingUtility.getControlSettings(mContext).getGpsStamp().equals("Address")) {
+                        String addr1 = gpsAddress.substring(0,50);
+                        String addr2 = gpsAddress.substring(50);
+                        GPSinfo1 = "Address: " +addr1;
+                        GPSinfo2 = addr2;
+                    } else if (SettingUtility.getControlSettings(mContext).getGpsStamp().equals("CSPI")) {
+                        GPSinfo1 = "City: " + gpsCity + " " + "State: " + gpsState;
+                        GPSinfo2 = "Postal Code: " + gpsPostalCode + " " + "Country: " + gpsCountry;
+                    }
+
+                }
+
+                cs.drawText(GPSinfo1, 30f, heights + 30f, tPaint);
+                cs.drawText(GPSinfo2, 30f, 2*heights + 70f, tPaint);
+
+                finalMatImage = ImageUtils.bitmapToMat(dest);
+
+
+                //==============================================================
+            }
+
+
+
+        }
+
+
 
         if (previewMode){
             Imgcodecs.imwrite(storageDirMain + "/" + "PREVIEW_" + currentTimeStamp + ".jpg", finalMatImage);

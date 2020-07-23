@@ -26,7 +26,11 @@ public class SettingUtility {
         Boolean onBottomCurrentHint = preferences.getBoolean("key_current_status_hint",true);
         Boolean displayCapturingStatus = preferences.getBoolean("key_capturing_hint",true);
 
-        return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode,previewMode,processingMode,removeBlackBorder,enhanceMode,onDisplayHint,onBottomCurrentHint,displayCapturingStatus);
+        String gpsStamp = preferences.getString("pref_camera_gpsstamp_format","0");
+
+        Boolean picStamp = preferences.getBoolean("pref_camera_stamp_photo",true);
+
+        return new SettingsControl(detectionMode,snapDuration,maxPhoto,storeOriginal,mode,previewMode,processingMode,removeBlackBorder,enhanceMode,onDisplayHint,onBottomCurrentHint,displayCapturingStatus,picStamp,gpsStamp);
     }
 
     public static class SettingsControl {
@@ -40,8 +44,10 @@ public class SettingUtility {
         String RemoveBlackBorder;
         String EnhanceMode;
         Boolean OnDisplayHint,OnBottomCurrentHint,DisplayCapturingStatus;
+        Boolean PicStamp;
+        String GpsStamp;
 
-        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode,Boolean previewMode,String processingMode,String removeBlackBorder,String enhanceMode,Boolean onDisplayHint,Boolean onBottomCurrentHint,Boolean displayCapturingStatus) {
+        public SettingsControl(Boolean detectionMode, String snapDuration, String maxPhoto, Boolean storeOriginal,String mode,Boolean previewMode,String processingMode,String removeBlackBorder,String enhanceMode,Boolean onDisplayHint,Boolean onBottomCurrentHint,Boolean displayCapturingStatus,Boolean picStamp,String gpsStamp) {
             DetectionMode = detectionMode;
             SnapDuration = snapDuration;
             MaxPhoto = maxPhoto;
@@ -54,9 +60,18 @@ public class SettingUtility {
             OnDisplayHint = onDisplayHint;
             OnBottomCurrentHint = onBottomCurrentHint;
             DisplayCapturingStatus = displayCapturingStatus;
+            PicStamp = picStamp;
+            GpsStamp = gpsStamp;
 
         }
 
+        public Boolean getPicStamp() {
+            return PicStamp;
+        }
+
+        public String getGpsStamp() {
+            return GpsStamp;
+        }
 
         public Boolean getOnDisplayHint() {
             return OnDisplayHint;
@@ -152,6 +167,55 @@ public class SettingUtility {
 
         public void setPreviewMode(Boolean previewMode) {
             PreviewMode = previewMode;
+        }
+    }
+
+
+    public static OnScreenGUISetting getOnScreenGUISettings(Context mContext){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Boolean OnScreenBatteryDetais = preferences.getBoolean("pref_on_screen_gui_Show_Battery_Details",true);
+        Boolean OnScreenTime = preferences.getBoolean("pref_on_screen_gui_Show_Time",true);
+        Boolean OnScreenStorageDetail = preferences.getBoolean("pref_on_screen_gui_Show_Storage_Detail",true);
+        Boolean OnScreenGPSInfo = preferences.getBoolean("pref_on_screen_gui_Show_GPS_info",true);
+        Boolean OnScreenRotationInfo = preferences.getBoolean("pref_on_screen_gui_Show_Rotation_info",false);
+        return new OnScreenGUISetting(OnScreenBatteryDetais,OnScreenTime,OnScreenStorageDetail,OnScreenGPSInfo,OnScreenRotationInfo);
+    }
+
+
+    public static class OnScreenGUISetting {
+        Boolean OnScreenBatteryDetais;
+        Boolean OnScreenTime;
+        Boolean OnScreenStorageDetail;
+        Boolean OnScreenGPSInfo;
+        Boolean OnScreenRotationInfo;
+
+        public OnScreenGUISetting(Boolean onScreenBatteryDetais, Boolean onScreenTime, Boolean onScreenStorageDetail, Boolean onScreenGPSInfo,Boolean onScreenRotationInfo) {
+            OnScreenBatteryDetais = onScreenBatteryDetais;
+            OnScreenTime = onScreenTime;
+            OnScreenStorageDetail = onScreenStorageDetail;
+            OnScreenGPSInfo = onScreenGPSInfo;
+            OnScreenRotationInfo = onScreenRotationInfo;
+        }
+
+        public Boolean getOnScreenRotationInfo() {
+            return OnScreenRotationInfo;
+        }
+
+        public Boolean getOnScreenBatteryDetais() {
+            return OnScreenBatteryDetais;
+        }
+
+        public Boolean getOnScreenTime() {
+            return OnScreenTime;
+        }
+
+        public Boolean getOnScreenStorageDetail() {
+            return OnScreenStorageDetail;
+        }
+
+
+        public Boolean getOnScreenGPSInfo() {
+            return OnScreenGPSInfo;
         }
     }
 

@@ -101,4 +101,17 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="cameraGpsStampFormat_entries">
+        <item>Default</item>
+        <item>Latitude Longitude</item>
+        <item>Address</item>
+        <item>City, State, Country</item>
+    </string-array>
+    <string-array name="cameraGpsStampFormat_values">
+        <item>LL</item>
+        <item>LL</item>
+        <item>Address</item>
+        <item>CSPI</item>
+    </string-array>
+
 </resources>

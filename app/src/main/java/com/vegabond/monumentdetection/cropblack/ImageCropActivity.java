@@ -105,6 +105,7 @@ public class ImageCropActivity extends Activity {
             //create new intent to start process image
             Intent intent = new Intent(getApplicationContext(), ImageEnhanceActivity.class);
             startActivity(intent);
+            finish();
 
         }
     };
@@ -133,6 +134,9 @@ public class ImageCropActivity extends Activity {
         Log.v("Cropping", "scaledBitmap");
         Log.v("Cropping", width + " " + height);
         Matrix m = new Matrix();
+        if (bitmap==null){
+            bitmap = Bitmap.createBitmap(100,100, Bitmap.Config.ARGB_8888);
+        }
         m.setRectToRect(new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight()), new RectF(0, 0, width, height), Matrix.ScaleToFit.CENTER);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
     }

@@ -29,12 +29,15 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.ExifInterface;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.MediaActionSound;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -45,11 +48,13 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -68,6 +73,9 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.vegabond.monumentdetection.commonutility.GPSTracker;
+import com.vegabond.monumentdetection.commonutility.OnDisplayOverlay;
+import com.vegabond.monumentdetection.commonutility.OnScreenGUI;
 import com.vegabond.monumentdetection.recentcaptureutility.CustomGalleryActivity;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -98,16 +106,21 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import static android.content.Context.BATTERY_SERVICE;
+import static android.content.Context.WINDOW_SERVICE;
 import static android.media.MediaActionSound.FOCUS_COMPLETE;
+import static com.vegabond.monumentdetection.commonutility.OnDisplayOverlay.setAvailableStorage;
+import static com.vegabond.monumentdetection.commonutility.OnDisplayOverlay.setCurrentTime;
 import static com.vegabond.monumentdetection.getstoragepath.storagePath.searchRecentCapturingPaths;
 
 public class Camera2BasicFragment extends Fragment
         implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
-
+    public BatteryManager bm;
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -369,6 +382,19 @@ public class Camera2BasicFragment extends Fragment
     static File storageDir;
     public static File storageDirMain;
 
+    public GPSTracker gps;
+    public static double gpsLatitude = 0.0;
+    public static double gpsLongitude = 0.0;
+    public static String gpsAddress = "";
+    public static String gpsState = "";
+    public static String gpsPostalCode = "";
+    public static String gpsCity = "";
+    public static String gpsCountry = "";
+    Display display;
+    int rotation_angle;
+    protected static TextView tvCurrentTime, tvCurrentStorageCapacity, tvCurrentBatteryCapacity, tvgpsLatitude, tvgpsLongitude,tvCurrentRotation;
+    protected static ImageView ivCurrentBatteryCapacity;
+
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         view.findViewById(R.id.IBcapture).setOnClickListener(this);
@@ -412,6 +438,86 @@ public class Camera2BasicFragment extends Fragment
                 startActivity(new Intent(getActivity(),SettingsActivity.class));
             }
         });
+
+        //==========================================================================================
+        tvCurrentTime = view.findViewById(R.id.TVcurrentTime);
+        tvCurrentBatteryCapacity = view.findViewById(R.id.TVbatteryCapacityLeft);
+        tvCurrentStorageCapacity = view.findViewById(R.id.TVspaceLeft);
+        tvgpsLatitude = view.findViewById(R.id.TVgpsLatitude);
+        tvgpsLongitude = view.findViewById(R.id.TVgpsLongitude);
+        ivCurrentBatteryCapacity = view.findViewById(R.id.IVbatteryCapacityLeft);
+        tvCurrentRotation = view.findViewById(R.id.TVcurrentRotation);
+
+
+        display = ((WindowManager) getActivity().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        bm = (BatteryManager)getActivity().getSystemService(BATTERY_SERVICE);
+        rotation_angle = display.getRotation();
+        Thread displayOverlayThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1 * 1000);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (gpsLongitude==0.0||gpsLatitude==0.0) {
+                                    gps = new GPSTracker(getContext());
+                                }
+                                if (gps.canGetLocation()) {
+                                    setCurrentTime();
+                                    OnDisplayOverlay odl = new OnDisplayOverlay(bm,display);
+                                    odl.setBatteryDetails();
+                                    setAvailableStorage();
+                                    odl.setRotationDetails();
+
+                                    rotation_angle = display.getRotation();
+                                    if (getContext().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                                        gpsLatitude = gps.getLatitude();
+                                        gpsLongitude = gps.getLongitude();
+                                        Geocoder geocoder;
+                                        List<Address> addresses = null;
+                                        geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+                                        try {
+                                            addresses = geocoder.getFromLocation(gpsLatitude, gpsLongitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                                            if (addresses.size()>0){
+                                                gpsAddress = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                                                gpsCity = addresses.get(0).getLocality();
+                                                gpsState = addresses.get(0).getAdminArea();
+                                                gpsCountry = addresses.get(0).getCountryName();
+                                                gpsPostalCode = addresses.get(0).getPostalCode();
+                                            }
+
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+//                                  String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+//                                    Log.d(TAG, gpsAddress + "\n" + gpsCity + "\n" + gpsState + "\n" + gpsCountry + "\n" + gpsPostalCode + "\n");
+                                        //============================================
+                                        OnScreenGUI osgui = new OnScreenGUI(getContext());
+                                        osgui.SetSettingsAsPerSettings();
+                                        //============================================
+                                    } else {
+                                        Log.d("Location", "Error");
+                                    }
+                                    tvgpsLatitude.setText("Lattitude :" + gpsLatitude);
+                                    tvgpsLongitude.setText("Longitude :" + gpsLongitude);
+//                                    Log.d("Checkx", camcorderSetting.getCamcorderCriticalBatteryCheck() + " " + checkForBatteryCritical() + " " + mIsRecordingStarted);
+
+                                }
+
+                            }
+                        });
+
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+        displayOverlayThread.start();
+
+        //==========================================================================================
 
     }
 
@@ -471,7 +577,35 @@ public class Camera2BasicFragment extends Fragment
         if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
             new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
         } else {
-            requestPermissions(new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+
+            int camera = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
+            int write = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int read = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+            int internet = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.INTERNET);
+            int fineLocation = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+            int coarseLocation = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
+            List<String> listPermissionsNeeded = new ArrayList<>();
+            if (write != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+            if (camera != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.CAMERA);
+            }
+            if (read != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+            if (internet != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.INTERNET);
+            }
+            if (fineLocation != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+            if (coarseLocation != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+            if (!listPermissionsNeeded.isEmpty()) {
+                requestPermissions(listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_CAMERA_PERMISSION);
+            }
         }
     }
 

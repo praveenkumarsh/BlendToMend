@@ -75,6 +75,12 @@ public class ImageViewActivity extends AppCompatActivity {
                             File file = new File(res);
                             if (SettingUtility.getControlSettings(getApplicationContext()).getProcessingMode().equals("0")||
                                     SettingUtility.getControlSettings(getApplicationContext()).getProcessingMode().equals("1")){
+                                //==========================================================================================
+
+
+
+                                //==========================================================================================
+
                                 final Intent intent = new Intent(Intent.ACTION_VIEW);
                                 intent.setDataAndType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
                                                 FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", file)

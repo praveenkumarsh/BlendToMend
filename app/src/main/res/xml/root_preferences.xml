@@ -83,7 +83,7 @@
             app:key="key_onscreen_hint"
             android:checked="true"
             app:defaultValue="true"
-            app:title="Display On Screen Hint as Overlay" />
+            app:title="Ghost Image Overlay" />
 
         <SwitchPreferenceCompat
             app:key="key_current_status_hint"
@@ -97,6 +97,70 @@
             app:defaultValue="true"
             app:title="Display Capturing status" />
 
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Photo Stamp"
+        >
+
+    <SwitchPreferenceCompat
+        app:key="pref_camera_stamp_photo"
+        app:summaryOff="Disable"
+        app:summaryOn="Enable"
+        app:title="Stamp Photo" />
+
+    <ListPreference
+        app:defaultValue="LL"
+        app:summary="Default"
+        app:entries="@array/cameraGpsStampFormat_entries"
+        app:entryValues="@array/cameraGpsStampFormat_values"
+        app:key="pref_camera_gpsstamp_format"
+        app:title="GPS Stamp Format"
+        app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="General">
+
+        <SwitchPreferenceCompat
+            app:key="pref_on_screen_gui_Show_Battery_Details"
+            app:summaryOff="Disable"
+            app:summaryOn="Enable"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Show Battery Detail" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_on_screen_gui_Show_Time"
+            app:summaryOff="Disable"
+            app:summaryOn="Enable"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Show Time" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_on_screen_gui_Show_Storage_Detail"
+            app:summaryOff="Disable"
+            app:summaryOn="Enable"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Show Storage Detail" />
+
+<!--        <SwitchPreferenceCompat-->
+<!--            app:key="pref_on_screen_gui_Show_Rotation_info"-->
+<!--            app:summaryOff="Disable"-->
+<!--            app:summaryOn="Enable"-->
+<!--            android:checked="true"-->
+<!--            app:defaultValue="true"-->
+<!--            app:title="Show Current Rotation" />-->
+
+        <SwitchPreferenceCompat
+            app:key="pref_on_screen_gui_Show_GPS_info"
+            app:summaryOff="Disable"
+            app:summaryOn="Enable"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Show GPS Info" />
 
     </PreferenceCategory>
 

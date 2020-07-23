@@ -2,6 +2,9 @@ package com.vegabond.monumentdetection.cropblack;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,8 +15,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.vegabond.monumentdetection.Camera2BasicFragment;
 import com.vegabond.monumentdetection.MainActivity;
 import com.vegabond.monumentdetection.R;
+import com.vegabond.monumentdetection.SettingUtility;
 import com.vegabond.monumentdetection.cropblack.helpers.ImageUtils;
 import com.vegabond.monumentdetection.cropblack.helpers.MyConstants;
 import com.vegabond.monumentdetection.cropblack.libraries.NativeClass;
@@ -28,6 +33,13 @@ import org.opencv.imgproc.Imgproc;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsAddress;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsCity;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsCountry;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsLatitude;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsLongitude;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsPostalCode;
+import static com.vegabond.monumentdetection.Camera2BasicFragment.gpsState;
 import static com.vegabond.monumentdetection.Camera2BasicFragment.storageDirMain;
 import static com.vegabond.monumentdetection.cropblack.helpers.ImageUtils.bitmapToMat;
 
@@ -82,7 +94,8 @@ public class ImageEnhanceActivity extends AppCompatActivity {
         findViewById(R.id.btnRetake).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ImageEnhanceActivity.this, MainActivity.class));
+                startActivity(new Intent(ImageEnhanceActivity.this, Camera2BasicFragment.class));
+                finish();
             }
         });
 
@@ -161,6 +174,9 @@ public class ImageEnhanceActivity extends AppCompatActivity {
         public void onClick(View v) {
             //TODO: create save
             Mat saveMat = bitmapToMat(selectedImageBitmap);
+            saveMat = getStampImage(saveMat);
+
+
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
             final String currentTimeStamp = dateFormat.format(new Date());
             Imgcodecs.imwrite(storageDirMain + "/" + "MONUMENT_" + currentTimeStamp + ".jpg", saveMat);
@@ -206,6 +222,56 @@ public class ImageEnhanceActivity extends AppCompatActivity {
             Log.d("Smoothen","Set");
         }
     };
+
+
+    private Mat getStampImage(Mat finalMatImage){
+        Bitmap bitmap;
+        if (Integer.parseInt(SettingUtility.getControlSettings(getApplicationContext()).getEnhanceMode())>=2){
+            bitmap = ImageUtils.matToBitmapGrayscale(finalMatImage);
+        }else {
+            bitmap = ImageUtils.matToBitmap(finalMatImage);
+        }
+
+        Bitmap dest = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas cs = new Canvas(dest);
+
+        Paint tPaint = new Paint();
+        tPaint.setTextSize(bitmap.getHeight()/45);
+        tPaint.setColor(getApplicationContext().getResources().getColor(R.color.colorRed));
+
+        Paint.Style style = Paint.Style.FILL;
+        style = Paint.Style.FILL;
+
+        tPaint.setStyle(style);
+        tPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD));
+        cs.drawBitmap(bitmap, 0f, 0f, null);
+        float heights = tPaint.measureText("yY");
+        //==============================================================
+        String GPSinfo1 = "";
+        String GPSinfo2 = "";
+        if (!SettingUtility.getControlSettings(getApplicationContext()).getGpsStamp().equals("-1")) {
+            if (SettingUtility.getControlSettings(getApplicationContext()).getGpsStamp().equals("LL")) {
+                GPSinfo1 = "Latitude: " + gpsLatitude;
+                GPSinfo2 = "Longitude: " + gpsLongitude;
+            } else if (SettingUtility.getControlSettings(getApplicationContext()).getGpsStamp().equals("Address")) {
+                String addr1 = gpsAddress.substring(0,50);
+                String addr2 = gpsAddress.substring(50);
+                GPSinfo1 = "Address: " +addr1;
+                GPSinfo2 = addr2;
+            } else if (SettingUtility.getControlSettings(getApplicationContext()).getGpsStamp().equals("CSPI")) {
+                GPSinfo1 = "City: " + gpsCity + " " + "State: " + gpsState;
+                GPSinfo2 = "Postal Code: " + gpsPostalCode + " " + "Country: " + gpsCountry;
+            }
+
+        }
+
+        cs.drawText(GPSinfo1, 30f, heights + 30f, tPaint);
+        cs.drawText(GPSinfo2, 30f, 2*heights + 70f, tPaint);
+
+        finalMatImage = ImageUtils.bitmapToMat(dest);
+        return finalMatImage;
+    }
 
 
 }
