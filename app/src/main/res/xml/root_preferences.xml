@@ -107,6 +107,8 @@
         app:key="pref_camera_stamp_photo"
         app:summaryOff="Disable"
         app:summaryOn="Enable"
+        android:checked="true"
+        app:defaultValue="true"
         app:title="Stamp Photo" />
 
     <ListPreference

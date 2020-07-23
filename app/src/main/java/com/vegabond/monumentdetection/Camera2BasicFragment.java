@@ -401,6 +401,7 @@ public class Camera2BasicFragment extends Fragment
         setting = SettingUtility.getControlSettings(getContext());
         storageDirMain  = new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/" + "Monument" + "/");
+        gps = new GPSTracker(getContext());
 
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
         notice = view.findViewById(R.id.TVNotice);

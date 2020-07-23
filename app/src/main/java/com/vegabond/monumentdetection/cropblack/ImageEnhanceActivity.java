@@ -94,7 +94,7 @@ public class ImageEnhanceActivity extends AppCompatActivity {
         findViewById(R.id.btnRetake).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ImageEnhanceActivity.this, Camera2BasicFragment.class));
+                startActivity(new Intent(ImageEnhanceActivity.this, MainActivity.class));
                 finish();
             }
         });

@@ -61,6 +61,115 @@
 
         </FrameLayout>
 
+        <TextView
+            android:id="@+id/TVcurrentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0:00:00 AM"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif"
+            android:outlineSpotShadowColor="@color/colorBlack"
+            android:outlineAmbientShadowColor="@color/colorBlack"
+            android:outlineProvider="background"
+            />
+
+        <TextView
+            android:id="@+id/TVspaceLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.9 GB"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="28dp"
+            android:fontFamily="sans-serif"
+            />
+
+        <TextView
+            android:id="@+id/TVgpsLatitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Latitude :0.0"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="45dp"
+            android:fontFamily="sans-serif"
+            />
+
+        <TextView
+            android:id="@+id/TVgpsLongitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Longitude :0.0"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="60dp"
+            android:fontFamily="sans-serif"
+            />
+
+
+        <ImageView
+            android:id="@+id/IVbatteryCapacityLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_battery_80_white"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="197dp"
+            />
+
+        <TextView
+            android:id="@+id/TVbatteryCapacityLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="90%"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="200dp"
+            android:layout_marginTop="30dp"
+            android:fontFamily="sans-serif"
+            />
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/current_view"-->
+        <!--            android:layout_width="300dp"-->
+        <!--            android:layout_height="300dp"-->
+        <!--            />-->
+
+
+
+
+        <TextView
+            android:id="@+id/TVcurrentRotation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Rotation : 0"
+            android:textAllCaps="false"
+            android:textColor="@android:color/holo_red_dark"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif"
+            android:visibility="invisible"
+            />
+
         <ImageView
             android:id="@+id/current_progress_display"
             android:layout_width="90dp"
