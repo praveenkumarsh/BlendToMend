@@ -10,7 +10,7 @@
             android:icon="@drawable/ic_camera"
             android:key="Developer"
             android:title="Developed By : "
-            android:summary="\t1. Praveen Kumar Sharma \n\t2. Anukriti \n\t3. Daksh">
+            android:summary="\t1. Praveen Kumar Sharma \n\t2. Anukriti Garg \n\t3. Daksh Chaudhary">
         </PreferenceScreen>
 
         <PreferenceScreen
@@ -35,7 +35,7 @@
             app:summaryOff="Disabled"
             app:summaryOn="Enabled"
             app:defaultValue="true"
-            app:title="Monument Detection Mode" />
+            app:title="BlendToMend Mode" />
 
         <ListPreference
             app:dependency="key_monumentDetectionModeState"
@@ -43,7 +43,7 @@
             app:defaultValue="10"
             app:entries="@array/snapGap_entries"
             app:entryValues="@array/snapGap_values"
-            app:title="Snap Gap Duration"
+            app:title="Interval"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
@@ -52,7 +52,7 @@
             app:defaultValue="10"
             app:entries="@array/maxPhoto_entries"
             app:entryValues="@array/maxPhoto_values"
-            app:title="Maximum Snap"
+            app:title="Maximum Images"
             app:useSimpleSummaryProvider="true" />
 
 
@@ -68,7 +68,7 @@
             app:defaultValue="1"
             app:entries="@array/Mode_entries"
             app:entryValues="@array/Mode_values"
-            app:title="Detection Mode"
+            app:title="Mode"
             app:useSimpleSummaryProvider="true" />
 
 
@@ -89,13 +89,13 @@
             app:key="key_current_status_hint"
             android:checked="true"
             app:defaultValue="true"
-            app:title="Display Current Status on bottom right corner" />
+            app:title="Current Status on Bottom Right Corner" />
 
         <SwitchPreferenceCompat
             app:key="key_capturing_hint"
             android:checked="true"
             app:defaultValue="true"
-            app:title="Display Capturing status" />
+            app:title="Capturing Status" />
 
 
     </PreferenceCategory>
@@ -130,7 +130,7 @@
             app:summaryOn="Enable"
             android:checked="true"
             app:defaultValue="true"
-            app:title="Show Battery Detail" />
+            app:title="Battery Info" />
 
         <SwitchPreferenceCompat
             app:key="pref_on_screen_gui_Show_Time"
@@ -146,7 +146,7 @@
             app:summaryOn="Enable"
             android:checked="true"
             app:defaultValue="true"
-            app:title="Show Storage Detail" />
+            app:title="Storage Info" />
 
 <!--        <SwitchPreferenceCompat-->
 <!--            app:key="pref_on_screen_gui_Show_Rotation_info"-->
@@ -174,7 +174,7 @@
             app:key="key_Preview"
             android:checked="true"
             app:defaultValue="true"
-            app:title="Preview Final Before Processing" />
+            app:title="Preview Before Processing" />
 
         <ListPreference
             app:key="key_Processing_Mode"

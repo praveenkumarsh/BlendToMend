@@ -25,7 +25,6 @@
     </string-array>
 
     <string-array name="maxPhoto_entries">
-        <item>Testing</item>
         <item>10</item>
         <item>15</item>
         <item>20</item>
@@ -33,7 +32,6 @@
     </string-array>
 
     <string-array name="maxPhoto_values">
-        <item>2</item>
         <item>10</item>
         <item>15</item>
         <item>20</item>
@@ -41,14 +39,14 @@
     </string-array>
 
     <string-array name="Mode_entries">
-        <item>Basic Mode1 (Pixel by pixel)</item>
-        <item>Basic Mode2 (Half Image compare)</item>
-        <item>Basic Mode3 (Sliding window)</item>
-        <item>Intermediate Mode1 (Half image compare with slidding window)</item>
-        <item>Advanced Mode1 (Using Short Array)</item>
-        <item>Advanced Mode2 (Using Short Array with Half Image Compare)</item>
-        <item>Advanced Mode3 (Using Short Array with Half Image and Sliding Window Compare)</item>
-        <item>Advanced Mode4 (Background Masking with Using Short Array)</item>
+        <item>Basic Mode 1 (Pixel by Pixel)</item>
+        <item>Basic Mode 2 (Compare Half Image)</item>
+        <item>Basic Mode 3 (Sliding Window)</item>
+        <item>Intermediate Mode (Compare Half Image using Sliding Window)</item>
+        <item>Advanced Mode 1 (Short Array)</item>
+        <item>Advanced Mode 2 (Compare Half Image using Short Array)</item>
+        <item>Advanced Mode 3 (Compare Half Image using Short Array and Sliding Window)</item>
+        <item>Advanced Mode 4 (Short Array and Background Masking)</item>
     </string-array>
 
     <string-array name="Mode_values">
