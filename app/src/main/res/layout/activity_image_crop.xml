@@ -53,7 +53,7 @@
                 android:adjustViewBounds="true" />
         </FrameLayout>
 
-        <com.vegabond.monumentdetection.cropblack.libraries.PolygonView
+        <com.praveen.blendtomend.cropblack.libraries.PolygonView
             android:id="@+id/polygonView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

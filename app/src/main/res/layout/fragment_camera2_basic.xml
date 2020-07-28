@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             >
 
-        <com.vegabond.monumentdetection.AutoFitTextureView
+        <com.praveen.blendtomend.AutoFitTextureView
             android:id="@+id/texture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -52,7 +52,7 @@
             app:layout_constraintStart_toStartOf="parent"
             >
 
-        </com.vegabond.monumentdetection.AutoFitTextureView>
+        </com.praveen.blendtomend.AutoFitTextureView>
 
         <ImageView
             android:id="@+id/sample_capture_view"
