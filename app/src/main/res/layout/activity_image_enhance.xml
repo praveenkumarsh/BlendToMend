@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ImageViewActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manual Mode"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center|top"
+        />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_gravity="top"
+        android:layout_marginTop="70dp"
+        android:background="#E0F1A9" />
+
+    <RelativeLayout
+        android:layout_marginTop="580dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <Button
+            android:id="@+id/btnImageToBW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="#E0ABEEF4"
+            android:text="B &amp; W"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:layout_alignParentStart="true"
+            android:autoSizeMaxTextSize="10dp"
+            />
+
+        <Button
+            android:id="@+id/btnImageToGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:text="Grey Color"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:backgroundTint="#E0ABEEF4"
+            android:layout_alignParentEnd="true"
+            />
+
+        <Button
+            android:id="@+id/btnImageSmoothen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Smoothen Image"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:backgroundTint="#E09BF492"
+            android:layout_toStartOf="@id/btnImageToGray"
+            android:layout_toEndOf="@id/btnImageToBW"
+            />
+
+        <Button
+            android:id="@+id/btnImageOriginal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="10dp"
+            android:text="Original"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:backgroundTint="#E09BF492"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/btnImageToBW"
+            />
+
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Image"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/btnImageSmoothen"
+            android:layout_toStartOf="@id/btnRetake"
+            android:layout_toEndOf="@id/btnImageOriginal"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:backgroundTint="#E0ABEEF4"
+            />
+
+        <Button
+            android:id="@+id/btnRetake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retake"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/btnImageToGray"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:backgroundTint="#E09BF492"
+            />
+
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBarImageEnhance"
+        style="?android:attr/progressBarStyle"
+        android:layout_gravity="bottom|center"
+        android:layout_width="50dp"
+        android:tint="@color/colorPrimary"
+        android:layout_height="50dp"
+        android:visibility="visible"
+        />
+
+</FrameLayout>
+    </ScrollView>

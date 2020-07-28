@@ -1,5 +1,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="root_key"
+    >
 
 
     <PreferenceCategory app:title="About">
@@ -8,7 +10,7 @@
             android:icon="@drawable/ic_camera"
             android:key="Developer"
             android:title="Developed By : "
-            android:summary="\t1. Praveen Kumar Sharma \n\t2. Anukriti \n\t3. Daksh">
+            android:summary="\t1. Praveen Kumar Sharma \n\t2. Anukriti Garg \n\t3. Daksh Chaudhary">
         </PreferenceScreen>
 
         <PreferenceScreen
@@ -33,7 +35,7 @@
             app:summaryOff="Disabled"
             app:summaryOn="Enabled"
             app:defaultValue="true"
-            app:title="Monument Detection Mode" />
+            app:title="BlendToMend Mode" />
 
         <ListPreference
             app:dependency="key_monumentDetectionModeState"
@@ -41,7 +43,7 @@
             app:defaultValue="10"
             app:entries="@array/snapGap_entries"
             app:entryValues="@array/snapGap_values"
-            app:title="Snap Gap Duration"
+            app:title="Interval"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
@@ -50,7 +52,7 @@
             app:defaultValue="10"
             app:entries="@array/maxPhoto_entries"
             app:entryValues="@array/maxPhoto_values"
-            app:title="Maximum Snap"
+            app:title="Maximum Images"
             app:useSimpleSummaryProvider="true" />
 
 
@@ -66,46 +68,143 @@
             app:defaultValue="1"
             app:entries="@array/Mode_entries"
             app:entryValues="@array/Mode_values"
-            app:title="Detection Mode"
+            app:title="Mode"
             app:useSimpleSummaryProvider="true" />
 
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Experimental">
+
+    <PreferenceCategory
+        android:key="preference_display"
+        app:title="Display">
+
+        <SwitchPreferenceCompat
+            app:key="key_onscreen_hint"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Ghost Image Overlay" />
+
+        <SwitchPreferenceCompat
+            app:key="key_current_status_hint"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Current Status on Bottom Right Corner" />
+
+        <SwitchPreferenceCompat
+            app:key="key_capturing_hint"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Capturing Status" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Photo Stamp"
+        >
+
+    <SwitchPreferenceCompat
+        app:key="pref_camera_stamp_photo"
+        app:summaryOff="Disable"
+        app:summaryOn="Enable"
+        android:checked="true"
+        app:defaultValue="true"
+        app:title="Stamp Photo" />
+
+    <ListPreference
+        app:defaultValue="LL"
+        app:summary="Default"
+        app:entries="@array/cameraGpsStampFormat_entries"
+        app:entryValues="@array/cameraGpsStampFormat_values"
+        app:key="pref_camera_gpsstamp_format"
+        app:title="GPS Stamp Format"
+        app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="General">
+
+        <SwitchPreferenceCompat
+            app:key="pref_on_screen_gui_Show_Battery_Details"
+            app:summaryOff="Disable"
+            app:summaryOn="Enable"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Battery Info" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_on_screen_gui_Show_Time"
+            app:summaryOff="Disable"
+            app:summaryOn="Enable"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Show Time" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_on_screen_gui_Show_Storage_Detail"
+            app:summaryOff="Disable"
+            app:summaryOn="Enable"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Storage Info" />
+
+<!--        <SwitchPreferenceCompat-->
+<!--            app:key="pref_on_screen_gui_Show_Rotation_info"-->
+<!--            app:summaryOff="Disable"-->
+<!--            app:summaryOn="Enable"-->
+<!--            android:checked="true"-->
+<!--            app:defaultValue="true"-->
+<!--            app:title="Show Current Rotation" />-->
+
+        <SwitchPreferenceCompat
+            app:key="pref_on_screen_gui_Show_GPS_info"
+            app:summaryOff="Disable"
+            app:summaryOn="Enable"
+            android:checked="true"
+            app:defaultValue="true"
+            app:title="Show GPS Info" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="preference_exp"
+        app:title="Experimental">
 
         <SwitchPreferenceCompat
             app:key="key_Preview"
             android:checked="true"
             app:defaultValue="true"
-            app:title="Preview Final Before Processing" />
+            app:title="Preview Before Processing" />
 
-        <SwitchPreferenceCompat
-            app:key="key_PostCaptureProcess"
-            android:checked="true"
-            app:defaultValue="true"
-            app:title="Post Capturing Process" />
+        <ListPreference
+            app:key="key_Processing_Mode"
+            app:defaultValue="2"
+            app:entries="@array/Processing_Mode_entries"
+            app:entryValues="@array/Processing_Mode_values"
+            app:title="Processing Mode"
+            app:useSimpleSummaryProvider="true" />
 
-        <SwitchPreferenceCompat
-            android:dependency="key_PostCaptureProcess"
-            app:key="key_RemoveBlackBorder"
-            android:checked="true"
-            app:defaultValue="true"
-            app:title="Auto Handle Black Border" />
+        <ListPreference
+            app:key="key_RemoveBlackBorders"
+            app:defaultValue="1"
+            app:entries="@array/Remove_Black_Mode_entries"
+            app:entryValues="@array/Remove_Black_Mode_values"
+            app:title="Auto Handle Black Border (for Automatic Mode)"
+            app:useSimpleSummaryProvider="true" />
 
-        <SwitchPreferenceCompat
-            android:dependency="key_PostCaptureProcess"
-            app:key="key_PostCaptureProcessMode"
-            android:checked="true"
-            app:defaultValue="true"
-            app:summaryOff="Manual"
-            app:summaryOn="Auto"
-            app:switchTextOn="Auto"
-            app:title="Post Capturing Process Mode" />
-
+        <ListPreference
+            app:key="key_Image_Enhance_Mode"
+            app:defaultValue="0"
+            app:entries="@array/Enhance_Mode_entries"
+            app:entryValues="@array/Enhance_Mode_values"
+            app:title="Enhance Mode (for Automatic Mode)"
+            app:useSimpleSummaryProvider="true" />
 
 
     </PreferenceCategory>
+
+
+
 
 
     <PreferenceCategory app:title="Help">

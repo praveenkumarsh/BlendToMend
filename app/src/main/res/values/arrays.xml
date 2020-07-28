@@ -11,7 +11,6 @@
     </string-array>
 
     <string-array name="snapGap_entries">
-        <item>2s</item>
         <item>5s</item>
         <item>10s</item>
         <item>15s</item>
@@ -19,7 +18,6 @@
     </string-array>
 
     <string-array name="snapGap_values">
-        <item>2</item>
         <item>5</item>
         <item>10</item>
         <item>15</item>
@@ -27,7 +25,6 @@
     </string-array>
 
     <string-array name="maxPhoto_entries">
-        <item>Testing</item>
         <item>10</item>
         <item>15</item>
         <item>20</item>
@@ -35,7 +32,6 @@
     </string-array>
 
     <string-array name="maxPhoto_values">
-        <item>2</item>
         <item>10</item>
         <item>15</item>
         <item>20</item>
@@ -43,14 +39,14 @@
     </string-array>
 
     <string-array name="Mode_entries">
-        <item>Basic Mode1 (Pixel by pixel)</item>
-        <item>Basic Mode2 (Half Image compare)</item>
-        <item>Basic Mode3 (Sliding window)</item>
-        <item>Intermediate Mode1 (Half image compare with slidding window)</item>
-        <item>Advanced Mode1 (Using Short Array)</item>
-        <item>Advanced Mode2 (Using Short Array with Half Image Compare)</item>
-        <item>Advanced Mode3 (Using Short Array with Half Image and Sliding Window Compare)</item>
-
+        <item>Basic Mode 1 (Pixel by Pixel)</item>
+        <item>Basic Mode 2 (Compare Half Image)</item>
+        <item>Basic Mode 3 (Sliding Window)</item>
+        <item>Intermediate Mode (Compare Half Image using Sliding Window)</item>
+        <item>Advanced Mode 1 (Short Array)</item>
+        <item>Advanced Mode 2 (Compare Half Image using Short Array)</item>
+        <item>Advanced Mode 3 (Compare Half Image using Short Array and Sliding Window)</item>
+        <item>Advanced Mode 4 (Short Array and Background Masking)</item>
     </string-array>
 
     <string-array name="Mode_values">
@@ -61,6 +57,59 @@
         <item>5</item>
         <item>6</item>
         <item>7</item>
+        <item>8</item>
+    </string-array>
+
+
+    <string-array name="Processing_Mode_entries">
+        <item>Off</item>
+        <item>Automatic</item>
+        <item>Manual</item>
+    </string-array>
+
+    <string-array name="Processing_Mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="Enhance_Mode_entries">
+        <item>Off</item>
+        <item>Smoothen</item>
+        <item>B &amp; W</item>
+        <item>Grayscale</item>
+    </string-array>
+
+    <string-array name="Enhance_Mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="Remove_Black_Mode_entries">
+        <item>Off</item>
+        <item>Auto Selection</item>
+        <item>Pre Defined Width</item>
+    </string-array>
+
+    <string-array name="Remove_Black_Mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="cameraGpsStampFormat_entries">
+        <item>Default</item>
+        <item>Latitude Longitude</item>
+        <item>Address</item>
+        <item>City, State, Country</item>
+    </string-array>
+    <string-array name="cameraGpsStampFormat_values">
+        <item>LL</item>
+        <item>LL</item>
+        <item>Address</item>
+        <item>CSPI</item>
     </string-array>
 
 </resources>
