@@ -30,7 +30,7 @@ Here is how to use this project to run native `OpenCV` code.
 
 ## Sample App Image
 <img src="app_sample.jpg" width="500" >
----
+----
 
 ## Sample App Run
 <img src="sample_run.jpg" width="700" >
