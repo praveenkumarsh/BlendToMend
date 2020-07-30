@@ -76,19 +76,19 @@ public class ImageProcessing {
                 break;
             case "5":
 //                Toast.makeText(mContext,"Advanced Mode 1 Selected",Toast.LENGTH_SHORT).show();
-                finalMatImage = advancedMode1(previewMode);
+                finalMatImage = advancedMode1(previewMode,mContext);
                 break;
             case "6":
 //                Toast.makeText(mContext,"Advanced Mode 2 Selected",Toast.LENGTH_SHORT).show();
-                finalMatImage = advancedMode2(previewMode);
+                finalMatImage = advancedMode2(previewMode,mContext);
                 break;
             case "7":
 //                Toast.makeText(mContext,"Advanced Mode 3 Selected",Toast.LENGTH_SHORT).show();
-                finalMatImage = advancedMode3(previewMode);
+                finalMatImage = advancedMode3(previewMode,mContext);
                 break;
             case "8":
 //                Toast.makeText(mContext,"Advanced Mode 3 Selected",Toast.LENGTH_SHORT).show();
-                finalMatImage = backgroundMasking(previewMode);
+                finalMatImage = backgroundMasking(previewMode,mContext);
                 break;
             default:
 //                Toast.makeText(mContext,"Basic Mode 1 Selected",Toast.LENGTH_SHORT).show();
@@ -444,8 +444,11 @@ public class ImageProcessing {
         return listImages.get(0);
     }
 
-    public static Mat advancedMode3(Boolean previewMode){
-        if (count>10) {
+    public static Mat advancedMode3(Boolean previewMode,Context mContext){
+        if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
+            count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
+        }
+        if(count>10){
             count = 10;
         }
         Log.d("ImageProcessing","In After Allignment");
@@ -514,8 +517,11 @@ public class ImageProcessing {
         return finalimg;
     }
 
-    public static Mat advancedMode2(Boolean previewMode){
-        if (count>10) {
+    public static Mat advancedMode2(Boolean previewMode,Context mContext){
+        if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
+            count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
+        }
+        if(count>10){
             count = 10;
         }
         Log.d("ImageProcessing","In After Allignment");
@@ -570,8 +576,11 @@ public class ImageProcessing {
         return finalimg;
     }
 
-    public static Mat advancedMode1(Boolean previewMode){
-        if (count>10) {
+    public static Mat advancedMode1(Boolean previewMode,Context mContext){
+        if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
+            count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
+        }
+        if(count>10){
             count = 10;
         }
         Log.d("ImageProcessing","In After Allignment");
@@ -629,8 +638,11 @@ public class ImageProcessing {
         return finalimg;
     }
 
-    public static Mat backgroundMasking(Boolean previewMode){
-        if (count>10) {
+    public static Mat backgroundMasking(Boolean previewMode,Context mContext){
+        if (count>Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto())) {
+            count = Integer.parseInt(SettingUtility.getControlSettings(mContext).getMaxPhoto());
+        }
+        if(count>10){
             count = 10;
         }
         Log.d("ImageProcessing","In After Allignment");
@@ -659,12 +671,15 @@ public class ImageProcessing {
             Mat res_temp = new Mat();
             Core.bitwise_and(img, img, res_temp, thresh);
 
+//            Imgcodecs.imwrite(storageDirMain + "/" + "/Masked0_" + i + ".jpg", res_temp);
 
             res_temp.convertTo(res_temp, CvType.CV_16SC3);
 
             int size = (int) (res_temp.total() * res_temp.channels());
             short[] temp = new short[size];
             res_temp.get(0, 0, temp);
+
+//            Imgcodecs.imwrite(storageDirMain + "/" + "/Masked1_" + i + ".jpg", res_temp);
 
             listImages.add(temp);
             //==========================================================

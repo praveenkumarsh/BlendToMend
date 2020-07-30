@@ -11,27 +11,37 @@
     </string-array>
 
     <string-array name="snapGap_entries">
+        <item>2s</item>
+        <item>4s</item>
         <item>5s</item>
+        <item>8s</item>
         <item>10s</item>
-        <item>15s</item>
-        <item>20s</item>
+        <item>30s</item>
+        <item>60s</item>
     </string-array>
 
     <string-array name="snapGap_values">
+        <item>2</item>
+        <item>4</item>
         <item>5</item>
+        <item>8</item>
         <item>10</item>
-        <item>15</item>
-        <item>20</item>
+        <item>30</item>
+        <item>60</item>
     </string-array>
 
     <string-array name="maxPhoto_entries">
-        <item>10</item>
+        <item>5</item>
+        <item>8</item>
+        <item>10 (Recommended)</item>
         <item>15</item>
         <item>20</item>
         <item>25</item>
     </string-array>
 
     <string-array name="maxPhoto_values">
+        <item>5</item>
+        <item>8</item>
         <item>10</item>
         <item>15</item>
         <item>20</item>
