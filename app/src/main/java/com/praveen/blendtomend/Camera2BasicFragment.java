@@ -1042,7 +1042,7 @@ public class Camera2BasicFragment extends Fragment
                             }
                             int remain = maxSnap[0]-count;
                             info.setText("Remaining : "+remain+"/"+maxSnap[0]+" Capture");
-                            Toast.makeText(getContext(), "Remaining : "+remain+"/"+maxSnap[0], Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(), "Remaining : "+remain+"/"+maxSnap[0], Toast.LENGTH_SHORT).show();
                         }
                     };
                     final Runnable afterProcessing = new Runnable() {
