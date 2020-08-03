@@ -1,4 +1,4 @@
-# BlendToMend
+# [BlendToMend](https://github.com/Praveen101997/BlendToMend)
 
 This application is a use to Remove unwanted (moving) objects from a burst of 10+ images to output the final image which consists of only the stable objects.
  
